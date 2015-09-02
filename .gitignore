@@ -31,7 +31,7 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 
 # Ignore Android SDK, NDK, Eclipse plugin and ANT files
-libs/
+#libs/
 bin/
 obj/
 assets/
