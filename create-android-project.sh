@@ -5,8 +5,11 @@
 # Don't modify the script until you know what you do.
 
 # set environment paramters
-NDK_ROOT_LOCAL="/home/laschweinski/android/android-ndk-r5"
-ANDROID_SDK_ROOT_LOCAL="/home/laschweinski/android/android-sdk-linux_86"
+#NDK_ROOT_LOCAL="/home/laschweinski/android/android-ndk-r5"
+#ANDROID_SDK_ROOT_LOCAL="/home/laschweinski/android/android-sdk-linux_86"
+NDK_ROOT_LOCAL="/home/zouqing/android/android-ndk-r10e" 
+ANDROID_SDK_ROOT_LOCAL="/home/zouqing/android/android-sdk-linux"
+
 
 NEED_BOX2D=false
 NEED_CHIPMUNK=false
@@ -106,7 +109,13 @@ create_android_project(){
     read TARGET_ID
     echo "input your project name:"
     read PROJECT_NAME
-    PROJECT_DIR=`pwd`/$PROJECT_NAME
+    PROJECT_DIR=`pwd`/projects/$PROJECT_NAME
+    PROJECT_ROOT=`pwd`/projects
+
+    # check if PROJECT_ROOT is exist
+    if [ ! -d $PROJECT_ROOT ]; then
+        mkdir $PROJECT_ROOT
+    fi
     
     # check if PROJECT_DIR is exist
     if [ -d $PROJECT_DIR ]; then
