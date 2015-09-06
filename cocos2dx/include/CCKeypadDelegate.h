@@ -30,6 +30,12 @@ THE SOFTWARE.
 
 namespace   cocos2d {
 
+typedef enum 
+{
+	EVENT_KEY_UP,
+	EVENT_KEY_DOWN
+}CCKeypadStatus;
+
 class CC_DLL CCKeypadDelegate
 {
 public:
@@ -37,7 +43,9 @@ public:
     virtual void keyBackClicked() {}
 
     // The menu key clicked. only avialble on wophone & android
-    virtual void keyMenuClicked() {};
+	virtual void keyMenuClicked() {};
+
+	virtual bool keyAllClicked(int key_code, CCKeypadStatus key_status) {return true;};
 };
 
 /**

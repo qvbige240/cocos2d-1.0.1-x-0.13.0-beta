@@ -138,7 +138,8 @@ void CCKeypadDispatcher::forceRemoveDelegate(CCKeypadDelegate* pDelegate)
     }
 }
 
-bool CCKeypadDispatcher::dispatchKeypadMSG(ccKeypadMSGType nMsgType)
+//bool CCKeypadDispatcher::dispatchKeypadMSG(ccKeypadMSGType nMsgType)
+bool CCKeypadDispatcher::dispatchKeypadMSG(int key_code, int key_state)
 {
     CCKeypadHandler  *pHandler;
     CCKeypadDelegate *pDelegate;
@@ -155,7 +156,8 @@ bool CCKeypadDispatcher::dispatchKeypadMSG(ccKeypadMSGType nMsgType)
             pHandler = *iter;
             pDelegate = pHandler->getDelegate();
 
-            switch (nMsgType)
+			pDelegate->keyAllClicked(key_code, (CCKeypadStatus)key_state);
+            /*switch (nMsgType)
             {
             case kTypeBackClicked:
                 pDelegate->keyBackClicked();
@@ -165,7 +167,7 @@ bool CCKeypadDispatcher::dispatchKeypadMSG(ccKeypadMSGType nMsgType)
                 break;
             default:
                 break;
-            }
+            }*/
         }
     }
 

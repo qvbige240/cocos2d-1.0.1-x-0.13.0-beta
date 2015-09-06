@@ -80,7 +80,8 @@ public:
     /**
     @brief dispatch the key pad msg
     */
-    bool dispatchKeypadMSG(ccKeypadMSGType nMsgType);
+    //bool dispatchKeypadMSG(ccKeypadMSGType nMsgType);
+	bool dispatchKeypadMSG(int key_code, int key_state);
 
 protected:
 

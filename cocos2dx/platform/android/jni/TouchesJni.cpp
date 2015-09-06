@@ -166,7 +166,10 @@ static CCTouch *s_pTouches[MAX_TOUCHES] = { NULL };
 
 	jboolean Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown(JNIEnv*  env, jobject thiz, jint keyCode)
 	{
-		switch (keyCode)
+		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, 1))
+			return JNI_TRUE;
+		return JNI_FALSE;
+		/*switch (keyCode)
 		{
 		case KEYCODE_BACK:
 			if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(kTypeBackClicked))
@@ -179,6 +182,13 @@ static CCTouch *s_pTouches[MAX_TOUCHES] = { NULL };
 		default:
 			return JNI_FALSE;
 		}
+		return JNI_FALSE;*/
+	}
+
+	jboolean Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown(JNIEnv*  env, jobject thiz, jint keyCode)
+	{
+		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, 0))
+			return JNI_TRUE;
 		return JNI_FALSE;
 	}
 }
