@@ -1,4 +1,6 @@
-
+envdefense
+projects/
+*~
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
@@ -29,7 +31,7 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 
 # Ignore Android SDK, NDK, Eclipse plugin and ANT files
-libs/
+#libs/
 bin/
 obj/
 assets/
