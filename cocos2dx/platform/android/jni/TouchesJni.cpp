@@ -166,7 +166,7 @@ static CCTouch *s_pTouches[MAX_TOUCHES] = { NULL };
 
 	jboolean Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown(JNIEnv*  env, jobject thiz, jint keyCode)
 	{
-		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, 1))
+		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, (CCKeypadStatus)1))
 			return JNI_TRUE;
 		return JNI_FALSE;
 		/*switch (keyCode)
@@ -185,9 +185,9 @@ static CCTouch *s_pTouches[MAX_TOUCHES] = { NULL };
 		return JNI_FALSE;*/
 	}
 
-	jboolean Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyDown(JNIEnv*  env, jobject thiz, jint keyCode)
+	jboolean Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeKeyUp(JNIEnv*  env, jobject thiz, jint keyCode)
 	{
-		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, 0))
+		if (CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(keyCode, (CCKeypadStatus)0))
 			return JNI_TRUE;
 		return JNI_FALSE;
 	}
