@@ -350,7 +350,8 @@ unsigned char* CCFileUtils::getFileDataFromZip(const char* pszZipFilePath, const
 /// functions iOS specific
 const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath, ccResolutionType *pResolutionType)
 {
-	return "";
+	//return "";
+    return pszRelativePath;
 }
 
 void CCFileUtils::setiPhoneRetinaDisplaySuffix(const char *suffix)
