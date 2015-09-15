@@ -29,6 +29,7 @@ NS_CC_BEGIN;
 
 // record the resource path
 static string s_strResourcePath = "";
+static char s_pszResourcePath[260] = {0};
 	
 /*
  * This function is implemented for jni to set apk path.
@@ -38,9 +39,10 @@ void CCFileUtils::setResourcePath(const char* pszResourcePath)
 	CCAssert(pszResourcePath != NULL, "[FileUtils setRelativePath] -- wrong relative path");
 	
 	string tmp(pszResourcePath);
-
 	if ((! pszResourcePath) || tmp.find(".apk") == string::npos)
 	{
+        strcpy(s_pszResourcePath, pszResourcePath);
+        CCLog("%s%d, ===set resource path s_pszResourcePath: %s\n", __FILE__, __LINE__, s_pszResourcePath);
 		return;
 	}
 
@@ -49,6 +51,15 @@ void CCFileUtils::setResourcePath(const char* pszResourcePath)
 
 const char* CCFileUtils::fullPathFromRelativePath(const char *pszRelativePath)
 {
+    if (s_pszResourcePath != NULL)
+    {
+        CCString *pRet = new CCString();
+        pRet->autorelease();
+        pRet->m_sString = s_pszResourcePath;
+        pRet->m_sString += pszRelativePath;
+        return pRet->m_sString.c_str();   
+    }
+
 	return pszRelativePath;
 }
 
