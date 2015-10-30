@@ -506,6 +506,19 @@ void CCEGLView::setScissorInPoints(float x, float y, float w, float h)
     }
 }
 
+CCRect CCEGLView::getViewPort()
+{
+	if (m_bNotHVGA)
+	{
+		return m_rcViewPort;
+	}
+	else
+	{
+		CCRect rect(0, 0, 0, 0);
+		return rect;
+	}
+}
+
 void CCEGLView::setIMEKeyboardState(bool /*bOpen*/)
 {
 }

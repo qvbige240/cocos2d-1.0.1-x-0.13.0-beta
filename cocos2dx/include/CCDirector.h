@@ -219,6 +219,12 @@ public:
 	CCNode* getNotificationNode();
 	void setNotificationNode(CCNode *node);
 
+	//handset
+	/** whether or not handset 
+	 */
+	bool isHandset() {return m_bHandset;}
+	bool checkHandset(void);
+
 	// window size
 
 	/** returns the size of the OpenGL view in points.
@@ -464,6 +470,9 @@ protected:
 
 	/* This object will be visited after the scene. Useful to hook a notification node */
 	CCNode *m_pNotificationNode;
+
+	/* whether or not handset */
+	bool m_bHandset;
 
 	/* Projection protocol delegate */
 	CCProjectionProtocol *m_pProjectionDelegate;

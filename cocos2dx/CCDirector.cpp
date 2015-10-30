@@ -454,6 +454,24 @@ CCPoint CCDirector::convertToUI(const CCPoint& obPoint)
 	return uiPoint;
 }
 
+bool CCDirector::checkHandset(void)
+{
+	CCRect cc_rect = s_sharedDirector.getOpenGLView()->getViewPort();
+	
+	if (cc_rect.size.width > 1024 && cc_rect.size.height > 600)
+	{
+		m_bHandset = true;
+		CCLog("%s%d==== handset m_obWinSizeInPixels.width = %f!\n", __FILE__, __LINE__, m_obWinSizeInPixels.width);
+	}
+	else
+	{
+		m_bHandset = false;
+		CCLog("%s%d====no handset m_obWinSizeInPixels.width = %f!\n", __FILE__, __LINE__, m_obWinSizeInPixels.width);
+	}
+
+	return m_bHandset;
+}
+
 CCSize CCDirector::getWinSize(void)
 {
 	CCSize s = m_obWinSizeInPoints;
