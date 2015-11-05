@@ -342,6 +342,16 @@ LRESULT CCEGLView::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_KEYUP:
+		if (wParam == VK_F1 || wParam == VK_F2)
+		{
+			if (GetKeyState(VK_LSHIFT) < 0 ||  GetKeyState(VK_RSHIFT) < 0 || GetKeyState(VK_SHIFT) < 0)
+				CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(wParam == VK_F1 ? kTypeBackClicked : kTypeMenuClicked, 0);
+		}
+		else if ((wParam >= 'A' && wParam <= 'Z') || (wParam >= 'a' && wParam <= 'z'))
+		{
+			CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(wParam, 0);
+		}
+
 		if ( m_lpfnAccelerometerKeyHook!=NULL )
 		{
 			(*m_lpfnAccelerometerKeyHook)( message,wParam,lParam );
