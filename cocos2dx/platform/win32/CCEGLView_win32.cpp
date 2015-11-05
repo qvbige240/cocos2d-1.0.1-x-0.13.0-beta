@@ -183,7 +183,8 @@ static LRESULT CALLBACK _WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 }
 
 CCEGLView::CCEGLView()
-: m_bCaptured(false)
+: m_bNotHVGA(false)
+, m_bCaptured(false)
 , m_bOrientationReverted(false)
 , m_bOrientationInitVertical(false)
 , m_pDelegate(NULL)
@@ -510,7 +511,8 @@ CCRect CCEGLView::getViewPort()
 {
 	if (m_bNotHVGA)
 	{
-		return m_rcViewPort;
+		CCRect rect(m_rcViewPort.left, m_rcViewPort.top, m_rcViewPort.right, m_rcViewPort.bottom);
+		return rect;
 	}
 	else
 	{

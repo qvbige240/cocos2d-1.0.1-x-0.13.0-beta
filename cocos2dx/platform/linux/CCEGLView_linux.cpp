@@ -81,7 +81,8 @@ NS_CC_BEGIN;
 static CCEGLView* s_pMainWindow = NULL;
 
 CCEGLView::CCEGLView()
-: m_bCaptured(false)
+: m_bNotHVGA(false)
+, m_bCaptured(false)
 , m_bOrientationReverted(false)
 , m_bOrientationInitVertical(false)
 , m_pDelegate(NULL)

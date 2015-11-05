@@ -87,6 +87,7 @@ private:
 	CCSize m_sSizeInPixel;
 	CCSize m_sSizeInPoint;
 	CCRect m_rcViewPort;
+	bool   m_bNotHVGA;
 
 	bool bIsInit;
 	int m_eInitOrientation;

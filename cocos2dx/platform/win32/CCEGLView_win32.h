@@ -100,6 +100,7 @@ private:
     SIZE                m_tSizeInPoints;
     float               m_fScreenScaleFactor;
     RECT                m_rcViewPort;
+	bool				m_bNotHVGA;
 	LPFN_ACCELEROMETER_KEYHOOK	m_lpfnAccelerometerKeyHook;
 };
 
