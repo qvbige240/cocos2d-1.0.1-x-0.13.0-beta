@@ -951,6 +951,11 @@ void CCDisplayLinkDirector::startAnimation(void)
 
 void CCDisplayLinkDirector::mainLoop(void)
 {
+	if (m_pobOpenGLView)
+	{
+		m_pobOpenGLView->HandleEvents();
+	}
+
 	if (m_bPurgeDirecotorInNextLoop)
 	{
 		purgeDirector();

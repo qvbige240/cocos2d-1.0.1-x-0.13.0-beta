@@ -1,12 +1,12 @@
 #include "SimpleAudioEngine.h"
-#include "FmodAudioPlayer.h"
+#include "SDLAudioPlayer.h"
 
 namespace CocosDenshion {
 
 static AudioPlayer* oAudioPlayer;
 
 SimpleAudioEngine::SimpleAudioEngine() {
-	oAudioPlayer = FmodAudioPlayer::sharedPlayer();
+	oAudioPlayer = SDLAudioPlayer::sharedPlayer();
 }
 
 SimpleAudioEngine::~SimpleAudioEngine() {

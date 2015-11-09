@@ -1,0 +1,12 @@
+prefix=/home/zouqing/platform/osource/cocos2d/cocos2d-1.0.1-x-0.13.0-beta/gen3/__install_sdl
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: SDL_mixer
+Description: mixer library for Simple DirectMedia Layer
+Version: 1.2.12
+Requires: sdl >= 1.2.10
+Libs: -L${libdir} -lSDL_mixer
+Cflags: -I${includedir}/SDL
+

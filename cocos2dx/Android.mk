@@ -115,13 +115,13 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/ \
 
 LOCAL_EXPORT_LDLIBS := -llog\
                        -lz \
-                       -lGLESv1_CM
+                       -lGL
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/ \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/platform
 
-LOCAL_LDLIBS := -lGLESv1_CM \
+LOCAL_LDLIBS := -lGL \
                 -llog \
                 -lz 
 
@@ -249,13 +249,13 @@ LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/ \
 
 LOCAL_EXPORT_LDLIBS := -llog\
                        -lz \
-                       -lGLESv1_CM
+                       -lGL
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/ \
                     $(LOCAL_PATH)/include \
                     $(LOCAL_PATH)/platform
 
-LOCAL_LDLIBS := -lGLESv1_CM \
+LOCAL_LDLIBS := -lGL \
                 -llog \
                 -lz 
 

@@ -9,7 +9,7 @@
 
 #include "CCGL.h"
 
-#include "GL/glfw.h"
+#include "GL/gl.h"
 
 #include "CCSet.h"
 #include "ccMacros.h"
@@ -17,63 +17,69 @@
 #include "CCTouch.h"
 #include "CCTouchDispatcher.h"
 #include "CCIMEDispatcher.h"
+#include "CCKeypadDispatcher.h"
 
-PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = NULL;
-PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT = NULL;
-PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = NULL;
-PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT = NULL;
-PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT = NULL;
-PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT = NULL;
-
-PFNGLGENBUFFERSARBPROC glGenBuffersARB = NULL;
-PFNGLBINDBUFFERARBPROC glBindBufferARB = NULL;
-PFNGLBUFFERDATAARBPROC glBufferDataARB = NULL;
-PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB = NULL;
-PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB = NULL;
+#include "SDL/SDL.h"
+#include "SDL/SDL_events.h"
+#include  <X11/Xlib.h>
+#include  <X11/Xatom.h>
+#include  <X11/Xutil.h>
+// PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = NULL;
+// PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT = NULL;
+// PFNGLBINDFRAMEBUFFEREXTPROC glBindFramebufferEXT = NULL;
+// PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC glCheckFramebufferStatusEXT = NULL;
+// PFNGLFRAMEBUFFERTEXTURE2DEXTPROC glFramebufferTexture2DEXT = NULL;
+// PFNGLGENERATEMIPMAPEXTPROC glGenerateMipmapEXT = NULL;
+// 
+// PFNGLGENBUFFERSARBPROC glGenBuffersARB = NULL;
+// PFNGLBINDBUFFERARBPROC glBindBufferARB = NULL;
+// PFNGLBUFFERDATAARBPROC glBufferDataARB = NULL;
+// PFNGLBUFFERSUBDATAARBPROC glBufferSubDataARB = NULL;
+// PFNGLDELETEBUFFERSARBPROC glDeleteBuffersARB = NULL;
 
 bool initExtensions() {
 #define LOAD_EXTENSION_FUNCTION(TYPE, FN)  FN = (TYPE)glfwGetProcAddress(#FN);
 	bool bRet = false;
-	do {
-
-//		char* p = (char*) glGetString(GL_EXTENSIONS);
-//		printf(p);
-
-		/* Supports frame buffer? */
-		if (glfwExtensionSupported("GL_EXT_framebuffer_object") != GL_FALSE)
-		{
-
-			/* Loads frame buffer extension functions */
-			LOAD_EXTENSION_FUNCTION(PFNGLGENERATEMIPMAPEXTPROC,
-					glGenerateMipmapEXT);
-			LOAD_EXTENSION_FUNCTION(PFNGLGENFRAMEBUFFERSEXTPROC,
-					glGenFramebuffersEXT);
-			LOAD_EXTENSION_FUNCTION(PFNGLDELETEFRAMEBUFFERSEXTPROC,
-					glDeleteFramebuffersEXT);
-			LOAD_EXTENSION_FUNCTION(PFNGLBINDFRAMEBUFFEREXTPROC,
-					glBindFramebufferEXT);
-			LOAD_EXTENSION_FUNCTION(PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC,
-					glCheckFramebufferStatusEXT);
-			LOAD_EXTENSION_FUNCTION(PFNGLFRAMEBUFFERTEXTURE2DEXTPROC,
-					glFramebufferTexture2DEXT);
-
-		} else {
-			break;
-		}
-
-		if (glfwExtensionSupported("GL_ARB_vertex_buffer_object") != GL_FALSE) {
-			LOAD_EXTENSION_FUNCTION(PFNGLGENBUFFERSARBPROC, glGenBuffersARB);
-			LOAD_EXTENSION_FUNCTION(PFNGLBINDBUFFERARBPROC, glBindBufferARB);
-			LOAD_EXTENSION_FUNCTION(PFNGLBUFFERDATAARBPROC, glBufferDataARB);
-			LOAD_EXTENSION_FUNCTION(PFNGLBUFFERSUBDATAARBPROC,
-					glBufferSubDataARB);
-			LOAD_EXTENSION_FUNCTION(PFNGLDELETEBUFFERSARBPROC,
-					glDeleteBuffersARB);
-		} else {
-			break;
-		}
-		bRet = true;
-	} while (0);
+// 	do {
+// 
+// //		char* p = (char*) glGetString(GL_EXTENSIONS);
+// //		printf(p);
+// 
+// 		/* Supports frame buffer? */
+// 		if (glfwExtensionSupported("GL_EXT_framebuffer_object") != GL_FALSE)
+// 		{
+// 
+// 			/* Loads frame buffer extension functions */
+// 			LOAD_EXTENSION_FUNCTION(PFNGLGENERATEMIPMAPEXTPROC,
+// 					glGenerateMipmapEXT);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLGENFRAMEBUFFERSEXTPROC,
+// 					glGenFramebuffersEXT);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLDELETEFRAMEBUFFERSEXTPROC,
+// 					glDeleteFramebuffersEXT);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLBINDFRAMEBUFFEREXTPROC,
+// 					glBindFramebufferEXT);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLCHECKFRAMEBUFFERSTATUSEXTPROC,
+// 					glCheckFramebufferStatusEXT);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLFRAMEBUFFERTEXTURE2DEXTPROC,
+// 					glFramebufferTexture2DEXT);
+// 
+// 		} else {
+// 			break;
+// 		}
+// 
+// 		if (glfwExtensionSupported("GL_ARB_vertex_buffer_object") != GL_FALSE) {
+// 			LOAD_EXTENSION_FUNCTION(PFNGLGENBUFFERSARBPROC, glGenBuffersARB);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLBINDBUFFERARBPROC, glBindBufferARB);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLBUFFERDATAARBPROC, glBufferDataARB);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLBUFFERSUBDATAARBPROC,
+// 					glBufferSubDataARB);
+// 			LOAD_EXTENSION_FUNCTION(PFNGLDELETEBUFFERSARBPROC,
+// 					glDeleteBuffersARB);
+// 		} else {
+// 			break;
+// 		}
+// 		bRet = true;
+// 	} while (0);
 	return bRet;
 }
 
@@ -100,128 +106,151 @@ CCEGLView::~CCEGLView()
 }
 
 void keyEventHandle(int iKeyID,int iKeyState) {
-	if (iKeyState ==GLFW_RELEASE) {
-		return;
-	}
-
-	if (iKeyID == GLFW_KEY_DEL) {
-		CCIMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
-	} else if (iKeyID == GLFW_KEY_ENTER) {
-		CCIMEDispatcher::sharedDispatcher()->dispatchInsertText("\n", 1);
-	} else if (iKeyID == GLFW_KEY_TAB) {
-
-	}
+// 	if (iKeyState ==GLFW_RELEASE) {
+// 		return;
+// 	}
+// 
+// 	if (iKeyID == GLFW_KEY_DEL) {
+// 		CCIMEDispatcher::sharedDispatcher()->dispatchDeleteBackward();
+// 	} else if (iKeyID == GLFW_KEY_ENTER) {
+// 		CCIMEDispatcher::sharedDispatcher()->dispatchInsertText("\n", 1);
+// 	} else if (iKeyID == GLFW_KEY_TAB) {
+// 
+// 	}
 }
 
 void charEventHandle(int iCharID,int iCharState) {
-	if (iCharState ==GLFW_RELEASE) {
-		return;
-	}
-
-	// ascii char
-	CCIMEDispatcher::sharedDispatcher()->dispatchInsertText((const char *)&iCharID, 1);
+// 	if (iCharState ==GLFW_RELEASE) {
+// 		return;
+// 	}
+// 
+// 	// ascii char
+// 	CCIMEDispatcher::sharedDispatcher()->dispatchInsertText((const char *)&iCharID, 1);
 
 }
 
 void mouseButtonEventHandle(int iMouseID,int iMouseState) {
-	if (iMouseID == GLFW_MOUSE_BUTTON_LEFT) {
-		//get current mouse pos
-		int x,y;
-		glfwGetMousePos(&x, &y);
-		CCPoint oPoint((float)x,(float)y);
-
-		if (!CCRect::CCRectContainsPoint(s_pMainWindow->m_rcViewPort,oPoint)) {
-			CCLOG("not in the viewport");
-			return;
-		}
-
-		s_pMainWindow->m_pTouch->SetTouchInfo((float)(oPoint.x - s_pMainWindow->m_rcViewPort.origin.x) / s_pMainWindow->m_fScreenScaleFactor,
-				(float)(oPoint.y - s_pMainWindow->m_rcViewPort.origin.y) / s_pMainWindow->m_fScreenScaleFactor);
-		s_pMainWindow->m_pSet->addObject(s_pMainWindow->m_pTouch);
-		s_pMainWindow->m_mousePoint = oPoint;
-
-		if (iMouseState == GLFW_PRESS) {
-			s_pMainWindow->m_pDelegate->touchesBegan(s_pMainWindow->m_pSet,NULL);
-
-		} else if (iMouseState == GLFW_RELEASE) {
-			s_pMainWindow->m_pDelegate->touchesEnded(s_pMainWindow->m_pSet,NULL);
-		}
-	}
+// 	if (iMouseID == GLFW_MOUSE_BUTTON_LEFT) {
+// 		//get current mouse pos
+// 		int x,y;
+// 		glfwGetMousePos(&x, &y);
+// 		CCPoint oPoint((float)x,(float)y);
+// 
+// 		if (!CCRect::CCRectContainsPoint(s_pMainWindow->m_rcViewPort,oPoint)) {
+// 			CCLOG("not in the viewport");
+// 			return;
+// 		}
+// 
+// 		s_pMainWindow->m_pTouch->SetTouchInfo((float)(oPoint.x - s_pMainWindow->m_rcViewPort.origin.x) / s_pMainWindow->m_fScreenScaleFactor,
+// 				(float)(oPoint.y - s_pMainWindow->m_rcViewPort.origin.y) / s_pMainWindow->m_fScreenScaleFactor);
+// 		s_pMainWindow->m_pSet->addObject(s_pMainWindow->m_pTouch);
+// 		s_pMainWindow->m_mousePoint = oPoint;
+// 
+// 		if (iMouseState == GLFW_PRESS) {
+// 			s_pMainWindow->m_pDelegate->touchesBegan(s_pMainWindow->m_pSet,NULL);
+// 
+// 		} else if (iMouseState == GLFW_RELEASE) {
+// 			s_pMainWindow->m_pDelegate->touchesEnded(s_pMainWindow->m_pSet,NULL);
+// 		}
+// 	}
 }
 
 void mousePosEventHandle(int iPosX,int iPosY) {
-	int iButtonState = glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT);
-
-	//to test move
-	if (iButtonState == GLFW_PRESS) {
-		if (iPosX!=(int)s_pMainWindow->m_mousePoint.x||iPosY!=(int)s_pMainWindow->m_mousePoint.y) {
-			//it movies
-			s_pMainWindow->m_pTouch->SetTouchInfo((float)(iPosX- s_pMainWindow->m_rcViewPort.origin.x) / s_pMainWindow->m_fScreenScaleFactor,
-					(float)(iPosY - s_pMainWindow->m_rcViewPort.origin.y) / s_pMainWindow->m_fScreenScaleFactor);
-			s_pMainWindow->m_pDelegate->touchesMoved(s_pMainWindow->m_pSet, NULL);
-			//update new mouse pos
-			s_pMainWindow->m_mousePoint.x = iPosX;
-			s_pMainWindow->m_mousePoint.y = iPosY;
-		}
-	}
+// 	int iButtonState = glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT);
+// 
+// 	//to test move
+// 	if (iButtonState == GLFW_PRESS) {
+// 		if (iPosX!=(int)s_pMainWindow->m_mousePoint.x||iPosY!=(int)s_pMainWindow->m_mousePoint.y) {
+// 			//it movies
+// 			s_pMainWindow->m_pTouch->SetTouchInfo((float)(iPosX- s_pMainWindow->m_rcViewPort.origin.x) / s_pMainWindow->m_fScreenScaleFactor,
+// 					(float)(iPosY - s_pMainWindow->m_rcViewPort.origin.y) / s_pMainWindow->m_fScreenScaleFactor);
+// 			s_pMainWindow->m_pDelegate->touchesMoved(s_pMainWindow->m_pSet, NULL);
+// 			//update new mouse pos
+// 			s_pMainWindow->m_mousePoint.x = iPosX;
+// 			s_pMainWindow->m_mousePoint.y = iPosY;
+// 		}
+// 	}
 }
 
 bool CCEGLView::Create(const char* pTitle, int iPixelWidth, int iPixelHeight, int iWidth, int iHeight, int iDepth) {
 	bool eResult;
-	int u32GLFWFlags = GLFW_WINDOW;
+	//int u32GLFWFlags = GLFW_WINDOW;
 	//create the window by glfw.
+	SDL_Surface *screen;
 
 	//check
 	CCAssert(iPixelWidth!=0&&iPixelHeight!=0, "invalid window's size equal 0");
 	CCAssert(iWidth!=0&&iHeight!=0, "invalid the size in points equal 0");
 
-	//Inits GLFW
-	eResult = glfwInit() != GL_FALSE;
-
-	if (!eResult) {
-		CCAssert(0, "fail to init the glfw");
-	}
-
 	/* Updates window hint */
-	glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+	//glfwOpenWindowHint(GLFW_WINDOW_NO_RESIZE, GL_TRUE);
+	SDL_Init( SDL_INIT_VIDEO );
+// 	CCLog("--- EGL_Open !\n");
+// 	if(EGL_Open()) 
+// 	{
+// 		CCLog("--- EGL_Open fail!\n");
+// 		exit(1);
+// 
+	const SDL_VideoInfo* info = SDL_GetVideoInfo();
+	screen = SDL_SetVideoMode( 800, 600, info->vfmt->BitsPerPixel, SDL_HWSURFACE | SDL_OPENGL | SDL_FULLSCREEN);
+	//pScreen = SDL_SetVideoMode( iPixelWidth, iPixelHeight, info->vfmt->BitsPerPixel, SDL_SWSURFACE /*| SDL_FULLSCREEN */);
+
+// 	if(EGL_Init()) 
+// 	{
+// 		CCLog("--- EGL_Init fail!\n");
+// 		exit(1);
+// 
+	glEnable( GL_TEXTURE_2D );
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
+	glCullFace( GL_BACK );
+
+	glClearColor(0.0f , 0.0f , 0.0f , 0.0f );
+	//Albert
+	//glColor3f(1.0f , 1.0f , 1.0f );
+
+	glShadeModel(GL_FLAT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 
 	/* Depending on video depth */
-	switch(iDepth)
-	{
-		/* 16-bit */
-		case 16:
-		{
-			/* Updates video mode */
-			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 5, 6, 5, 0, 16, 0, (int)u32GLFWFlags) != false) ? true : false;
-
-			break;
-		}
-
-		/* 24-bit */
-		case 24:
-		{
-			/* Updates video mode */
-			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 8, 8, 8, 0, 16, 0, (int)u32GLFWFlags) != false) ? true : false;
-
-			break;
-		}
-
-		/* 32-bit */
-		default:
-		case 32:
-		{
-			/* Updates video mode */
-			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 8, 8, 8, 8, 16, 0, (int)u32GLFWFlags) != GL_FALSE) ? true :false;
-			break;
-		}
-	}
+// 	switch(iDepth)
+// 	{
+// 		/* 16-bit */
+// 		case 16:
+// 		{
+// 			/* Updates video mode */
+// 			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 5, 6, 5, 0, 16, 0, (int)u32GLFWFlags) != false) ? true : false;
+// 
+// 			break;
+// 		}
+// 
+// 		/* 24-bit */
+// 		case 24:
+// 		{
+// 			/* Updates video mode */
+// 			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 8, 8, 8, 0, 16, 0, (int)u32GLFWFlags) != false) ? true : false;
+// 
+// 			break;
+// 		}
+// 
+// 		/* 32-bit */
+// 		default:
+// 		case 32:
+// 		{
+// 			/* Updates video mode */
+// 			eResult = (glfwOpenWindow(iPixelWidth, iPixelHeight, 8, 8, 8, 8, 16, 0, (int)u32GLFWFlags) != GL_FALSE) ? true :false;
+// 			break;
+// 		}
+// 	}
 
 	/* Success? */
 	if(eResult)
 	{
 
 		/* Updates actual size */
-		glfwGetWindowSize(&iPixelWidth, &iPixelHeight);
+// 		glfwGetWindowSize(&iPixelWidth, &iPixelHeight);
 
 		//assign screen size and point's size
 		m_sSizeInPixel.width = iPixelWidth;
@@ -242,30 +271,100 @@ bool CCEGLView::Create(const char* pTitle, int iPixelWidth, int iPixelHeight, in
 		m_rcViewPort.size.height = viewPortH;
 
 		/* Updates its title */
-		glfwSetWindowTitle(pTitle);
+// 		glfwSetWindowTitle(pTitle);
 
 		//set the init flag
 		bIsInit = true;
 		s_pMainWindow = this;
 
-		//register the glfw key event
-		glfwSetKeyCallback(keyEventHandle);
-		//register the glfw char event
-		glfwSetCharCallback(charEventHandle);
-		//register the glfw mouse event
-		glfwSetMouseButtonCallback(mouseButtonEventHandle);
-		//register the glfw mouse pos event
-		glfwSetMousePosCallback(mousePosEventHandle);
+// 		//register the glfw key event
+// 		glfwSetKeyCallback(keyEventHandle);
+// 		//register the glfw char event
+// 		glfwSetCharCallback(charEventHandle);
+// 		//register the glfw mouse event
+// 		glfwSetMouseButtonCallback(mouseButtonEventHandle);
+// 		//register the glfw mouse pos event
+// 		glfwSetMousePosCallback(mousePosEventHandle);
 
 		//Inits extensions
 		eResult = initExtensions();
 
-		if (!eResult) {
-			CCAssert(0, "fail to init the extensions of opengl");
-		}
+// 		if (!eResult) {
+// 			CCAssert(0, "fail to init the extensions of opengl");
+// 		}
 
 	}
 	return true;
+}
+
+void CCEGLView::HandleEvents()
+{
+	SDL_Event event;
+	SDL_memset(&event, 0, sizeof(event));
+
+	while (SDL_PollEvent(&event) > 0)
+	{
+		switch(event.type)
+		{
+		case SDL_QUIT:
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			if (m_pTouch && m_pDelegate)
+			{
+				CCPoint cur_point((float)event.button.x, (float)event.button.y);
+				if (CCRect::CCRectContainsPoint(m_rcViewPort, cur_point))
+				{
+					CCLOG("not in the viewport");
+					return;
+				}
+
+				m_bCaptured = true;
+				m_pTouch->SetTouchInfo((cur_point.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor, 
+					(cur_point.y - m_rcViewPort.origin.y) / m_fScreenScaleFactor);
+				m_pSet->addObject(m_pTouch);
+				m_mousePoint = cur_point;
+				m_pDelegate->touchesBegan(m_pSet, NULL);
+			}
+			break;
+		case SDL_MOUSEMOTION:
+			if (m_bCaptured)
+			{
+				m_pTouch->SetTouchInfo(((float)event.motion.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor, 
+					((float)event.motion.y - m_rcViewPort.origin.y) / m_fScreenScaleFactor);
+				m_pSet->addObject(m_pTouch);
+				m_pDelegate->touchesMoved(m_pSet, NULL);
+				m_mousePoint.x = event.motion.x;
+				m_mousePoint.y = event.motion.y;
+			}
+			break;
+		case SDL_MOUSEBUTTONUP:
+			if (m_bCaptured)
+			{
+				CCPoint cur_point((float)event.button.x, (float)event.button.y);
+				if (CCRect::CCRectContainsPoint(m_rcViewPort, cur_point))
+				{
+					CCLOG("not in the viewport");
+					return;
+				}
+
+				m_bCaptured = false;
+				m_pTouch->SetTouchInfo((cur_point.x - m_rcViewPort.origin.x) / m_fScreenScaleFactor, 
+					(cur_point.y - m_rcViewPort.origin.y) / m_fScreenScaleFactor);
+				m_pSet->addObject(m_pTouch);
+				m_mousePoint = cur_point;
+				m_pDelegate->touchesEnded(m_pSet, NULL);
+			}
+			break;
+		case SDL_KEYDOWN:
+			CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG((int)event.key.keysym.scancode, 1);
+			break;
+		case SDL_KEYUP:
+			CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG((int)event.key.keysym.scancode, 0);
+			break;
+		default:break;
+		}
+
+	}
 }
 
 CCSize CCEGLView::getSize()
@@ -286,7 +385,9 @@ bool CCEGLView::isIpad()
 void CCEGLView::release()
 {
 	/* Exits from GLFW */
-	glfwTerminate();
+// 	glfwTerminate();
+// 	EGL_Close();
+	SDL_Quit();
 	exit(0);
 }
 
@@ -298,7 +399,9 @@ void CCEGLView::setTouchDelegate(EGLTouchDelegate * pDelegate) {
 void CCEGLView::swapBuffers() {
 	if (bIsInit) {
 		/* Swap buffers */
-		glfwSwapBuffers();
+/*		glfwSwapBuffers();*/
+
+		SDL_GL_SwapBuffers();
 	}
 }
 

@@ -1,5 +1,5 @@
-CC      = gcc
-CXX     = g++
+CC      = i686-linux-gcc
+CXX     = i686-linux-g++
 TARGET	= libcocosdenshion.so
 CCFLAGS = -Wall -g -O2 -fPIC
 CXXFLAGS = -Wall -g -O2 -fPIC
@@ -19,7 +19,7 @@ endif
 
 DEFINES = -DLINUX
 
-OBJECTS =   ../linux/FmodAudioPlayer.o \
+OBJECTS =   ../linux/SDLAudioPlayer.o \
             ../linux/SimpleAudioEngine.o \
 
 STATICLIBS = 
@@ -29,7 +29,7 @@ SHAREDLIBS_DIR = ../third_party/linux/fmod/lib64/api/lib
 SHAREDLIBS = -L$(SHAREDLIBS_DIR) -lfmodex64
 else
 SHAREDLIBS_DIR = ../third_party/linux/fmod/api/lib
-SHAREDLIBS = -L$(SHAREDLIBS_DIR) -lfmodex
+SHAREDLIBS = -L$(SHAREDLIBS_DIR)
 endif
 
 

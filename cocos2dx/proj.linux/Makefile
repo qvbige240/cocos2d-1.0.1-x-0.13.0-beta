@@ -1,8 +1,8 @@
-CC      = gcc
-CXX     = g++
+CC      = i686-linux-gcc
+CXX     = i686-linux-g++
 TARGET	= libcocos2d.so
 CCFLAGS = -Wall -g -O2 -fPIC
-CXXFLAGS = -Wall -g -O2 -fPIC
+CXXFLAGS = -Wall -g -O2 -fPIC -DGL_GLEXT_PROTOTYPES=1
 VISIBILITY = 
 
 INCLUDES = -I.. \
@@ -11,10 +11,13 @@ INCLUDES = -I.. \
 					-I../platform \
 					-I../platform/third_party/linux/libpng \
 					-I../platform/third_party/linux/libxml2 \
-					-I../platform/third_party/linux/libjpeg 
+					-I../platform/third_party/linux/libjpeg \
+					-I../platform/third_party/linux \
+					-I/opt/timesys/linux/6.2/i686-std/rfs/usr/include \
+					-I../../lib/__install_sdl/include
 					
 # add -DUSE_FONTCONFIG if you want to use libfontconfig 					
-DEFINES = -DLINUX 
+DEFINES = -DLINUX -DGL_GLEXT_PROTOTYPES=1
 
 OBJECTS = ../actions/CCAction.o \
 					../actions/CCActionCamera.o \
@@ -108,20 +111,22 @@ OBJECTS = ../actions/CCAction.o \
 					../CCScheduler.o \
 					../cocos2d.o 
 
-LBITS := $(shell getconf LONG_BIT)
-ifeq ($(LBITS),64)
-STATICLIBS_DIR = ../platform/third_party/linux/libraries/lib64
-else
-STATICLIBS_DIR = ../platform/third_party/linux/libraries
-endif
-STATICLIBS = $(STATICLIBS_DIR)/libfreetype.a \
-						$(STATICLIBS_DIR)/libcurl.a \
-						$(STATICLIBS_DIR)/libxml2.a \
-						$(STATICLIBS_DIR)/libpng.a \
-						$(STATICLIBS_DIR)/libjpeg.a
 
+STATICLIBS_DIR = ../platform/third_party/linux/libraries
+
+STATICLIBS = $(STATICLIBS_DIR)/libfreetype.a \
+                                               $(STATICLIBS_DIR)/libcurl.a \
+                                               $(STATICLIBS_DIR)/libxml2.a \
+                                               $(STATICLIBS_DIR)/libpng.a \
+                                               $(STATICLIBS_DIR)/libjpeg.a
+ 
 # add -lfontconfig if you want to use libfontconfig
-SHAREDLIBS = -lglfw -lGL
+SHAREDLIBS = -L../../lib/__install_sdl/lib \
+		-L../../lib/xserver \
+		-Wl,-rpath,../../lib/__install_sdl/lib \
+		-Wl,-rpath,../../lib/xserver \
+		-lSDL -lGL -lX11
+#		-lxml2 -ljpeg -lcurl -lSDL -lGL -lX11 
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 

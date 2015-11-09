@@ -1,6 +1,6 @@
-CC      = gcc
-CXX     = g++
-AR      = ar
+CC      = i686-linux-gcc
+CXX     = i686-linux-g++
+AR      = i686-linux-ar
 TARGET	= libbox2d.a
 CCFLAGS = -Wall -g -O2 
 CXXFLAGS = -Wall -g -O2 

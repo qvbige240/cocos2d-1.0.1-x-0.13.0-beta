@@ -1,6 +1,6 @@
-CC      = gcc
-CXX     = g++
-AR      = ar
+CC      = i686-linux-gcc
+CXX     = i686-linux-g++
+AR      = i686-linux-ar
 TARGET	= libchipmunk.a
 CCFLAGS = -Wall -g -O2 -std=c99
 CXXFLAGS = -Wall -g -O2 

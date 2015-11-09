@@ -36,6 +36,8 @@ public:
 	 */
 	virtual bool Create(const char* pTitle, int iPixelWidth, int iPixelHeight, int iWidth, int iHeight, int iDepth=16);
 
+	void HandleEvents();
+
 	CCSize getSize();
 	bool isOpenGLReady();
 	bool isIpad();
@@ -87,6 +89,7 @@ private:
 	CCSize m_sSizeInPixel;
 	CCSize m_sSizeInPoint;
 	CCRect m_rcViewPort;
+	bool   m_bNotHVGA;
 
 	bool bIsInit;
 	int m_eInitOrientation;
