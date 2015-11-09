@@ -7,8 +7,17 @@
 # set environment paramters
 #NDK_ROOT_LOCAL="/home/laschweinski/android/android-ndk-r5"
 #ANDROID_SDK_ROOT_LOCAL="/home/laschweinski/android/android-sdk-linux_86"
-NDK_ROOT_LOCAL="/home/zouqing/android/android-ndk-r10e" 
-ANDROID_SDK_ROOT_LOCAL="/home/zouqing/android/android-sdk-linux"
+#NDK_ROOT_LOCAL="/home/zouqing/android/android-ndk-r10e" 
+#ANDROID_SDK_ROOT_LOCAL="/home/zouqing/android/android-sdk-linux"
+
+if [ -z "${NDK_ROOT+aaa}"  ];then
+    echo "please define NDK_ROOT"
+    exit -1
+fi
+
+NDK_ROOT_LOCAL=$NDK_ROOT 
+ANDROID_SDK_ROOT_LOCAL=$ANDROID_SDK_ROOT
+
 
 
 NEED_BOX2D=false
