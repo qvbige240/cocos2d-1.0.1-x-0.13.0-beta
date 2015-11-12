@@ -372,8 +372,18 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
     
  @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+	Integer key = GameAppConfig.mHashMap.get(keyCode);
+		if (key != null) {
+			keyCode = key;
+		}
     	final int kc = keyCode;
-    	if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU) {
+    	if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_MENU 
+    			|| keyCode == KeyEvent.KEYCODE_A || keyCode == KeyEvent.KEYCODE_S
+    			|| keyCode == KeyEvent.KEYCODE_D || keyCode == KeyEvent.KEYCODE_W 
+    			|| keyCode == KeyEvent.KEYCODE_J || keyCode == KeyEvent.KEYCODE_K 
+    			|| keyCode == KeyEvent.KEYCODE_L || keyCode == KeyEvent.KEYCODE_I 
+    			|| keyCode == KeyEvent.KEYCODE_O || keyCode == KeyEvent.KEYCODE_P 
+    			|| keyCode == KeyEvent.KEYCODE_Z || keyCode == KeyEvent.KEYCODE_X ) {
     		queueEvent(new Runnable() {
 	            @Override
 	            public void run() {

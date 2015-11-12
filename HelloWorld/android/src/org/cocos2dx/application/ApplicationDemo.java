@@ -23,10 +23,17 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.application;
 
+import java.io.IOException;
+import java.util.HashMap;
+
 import org.cocos2dx.lib.Cocos2dxActivity;
 import org.cocos2dx.lib.Cocos2dxEditText;
 import org.cocos2dx.lib.Cocos2dxGLSurfaceView;
+import org.cocos2dx.lib.GameAppConfig;
+import org.xmlpull.v1.XmlPullParserException;
 
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
 import android.os.Bundle;
 
 public class ApplicationDemo extends Cocos2dxActivity{
@@ -40,10 +47,47 @@ public class ApplicationDemo extends Cocos2dxActivity{
 		super.setPackageName(packageName);
 		
 		setContentView(R.layout.helloworld_demo);
-        mGLView = (Cocos2dxGLSurfaceView) findViewById(R.id.helloworld_gl_surfaceview);
-        mGLView.setTextField((Cocos2dxEditText)findViewById(R.id.textField));
+        	mGLView = (Cocos2dxGLSurfaceView) findViewById(R.id.helloworld_gl_surfaceview);
+        	mGLView.setTextField((Cocos2dxEditText)findViewById(R.id.textField));
+		
+		GameAppConfig.mHashMap = parserKeyValueXML(this, R.xml.keymap);
 	}
 	
+
+	// Key value XML parser
+	public static HashMap<Integer, Integer> parserKeyValueXML(ApplicationDemo activity, int xmlID) {  
+		Resources res = activity.getResources();    
+		XmlResourceParser xmlParser = res.getXml(xmlID);  
+		HashMap<Integer, Integer> mMap = new HashMap<Integer, Integer>();  
+		   
+		try {  
+			int eventType = xmlParser.getEventType();  
+		     // File end?   
+			while (eventType != XmlResourceParser.END_DOCUMENT) {  
+				if (eventType == XmlResourceParser.START_TAG) {    
+					String tagname = xmlParser.getName();    
+					if (tagname.endsWith("key")) {
+						//Log.v("====Error", xmlParser.getAttributeValue(null, "eurowing") + " ####  " + xmlParser.getAttributeValue(null, "game"));
+						mMap.put(
+							Integer.parseInt(xmlParser.getAttributeValue(null, "eurowing")), //eurowing actual key value
+							Integer.parseInt(xmlParser.getAttributeValue(null, "game")));    //mapping game needs key value
+	 				}   
+				} else if (eventType == XmlResourceParser.END_TAG) {    
+					
+				} else if (eventType == XmlResourceParser.TEXT) {    
+					
+				}  
+				eventType = xmlParser.next();    
+			}  
+		} catch (XmlPullParserException e) {    
+		             
+		} catch (IOException e) {  
+			e.printStackTrace();  
+		}  
+		xmlParser.close();  
+		return mMap;  
+	} 
+
 	 @Override
 	 protected void onPause() {
 	     super.onPause();

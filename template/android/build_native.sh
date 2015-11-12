@@ -1,7 +1,8 @@
 # set params
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NDK_ROOT=__ndkroot__
 COCOS2DX_ROOT=__cocos2dxroot__
-GAME_ROOT=$COCOS2DX_ROOT/__projectname__
+GAME_ROOT=$COCOS2DX_ROOT/projects/__projectname__
 GAME_ANDROID_ROOT=$GAME_ROOT/android
 RESOURCE_ROOT=$GAME_ROOT/Resources
 

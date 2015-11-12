@@ -92,12 +92,19 @@ modify_layout(){
     sed "s/helloworld_gl_surfaceview/game_gl_surfaceview/" $APP_DIR/android/res/layout/helloworld_demo.xml > $APP_DIR/android/res/layout/game_demo.xml
     rm -f $APP_DIR/android/res/layout/main.xml
     rm -f $APP_DIR/android/res/layout/helloworld_demo.xml
+
+    cp -r $HELLOWORLD_ROOT/android/res/xml $APP_DIR/android/res
+    cp -r $HELLOWORLD_ROOT/android/res/values-zh-rCN $APP_DIR/android/res
 }
 
 # android.bat of android 4.0 don't create res/drawable-hdpi res/drawable-ldpi and res/drawable-mdpi.
 # These work are done in ADT
 copy_icon(){
     if [ ! -d $APP_DIR/android/res/drawable-hdpi ]; then
+        cp $HELLOWORLD_ROOT/android/res/drawable-hdpi/* $APP_DIR/android/res/drawable-hdpi
+        cp $HELLOWORLD_ROOT/android/res/drawable-ldpi/* $APP_DIR/android/res/drawable-ldpi
+        cp $HELLOWORLD_ROOT/android/res/drawable-mdpi/* $APP_DIR/android/res/drawable-mdpi
+    else
         cp -r $HELLOWORLD_ROOT/android/res/drawable-hdpi $APP_DIR/android/res
         cp -r $HELLOWORLD_ROOT/android/res/drawable-ldpi $APP_DIR/android/res
         cp -r $HELLOWORLD_ROOT/android/res/drawable-mdpi $APP_DIR/android/res

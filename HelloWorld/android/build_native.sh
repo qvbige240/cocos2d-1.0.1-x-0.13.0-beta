@@ -1,4 +1,5 @@
 # set params
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}"   )" && pwd   )"
 NDK_ROOT_LOCAL=/cygdrive/d/programe/android/ndk/android-ndk-r7b
 COCOS2DX_ROOT_LOCAL=/cygdrive/e/cocos2d-x
 
