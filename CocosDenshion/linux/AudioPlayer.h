@@ -98,7 +98,7 @@ public:
 	 @details	    the compressed audio will be decode to wave, then write into an
 	 internal buffer in SimpleaudioEngine
 	 */
-	virtual void preloadEffect(const char* pszFilePath) = 0;
+	virtual void* preloadEffect(const char* pszFilePath) = 0;
 
 	/**
 	 @brief  		unload the preloaded effect from internal buffer

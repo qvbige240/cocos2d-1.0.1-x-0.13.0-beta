@@ -13,6 +13,7 @@ INCLUDES = -I.. \
 else
 INCLUDES = -I.. \
 		-I../include \
+		-I../../lib/__install_sdl/include \
 		-I../third_party/linux/fmod/api/inc 
 endif
 

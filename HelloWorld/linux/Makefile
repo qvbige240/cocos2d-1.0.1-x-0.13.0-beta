@@ -25,7 +25,7 @@ STATICLIBS =
 SHAREDLIBS = -L../../lib/linux/Debug \
 		-L../../lib/__install_sdl/lib \
 		-L../../lib/xserver \
-		-lcocos2d -lSDL -lGL -lXext -lXxf86vm -ldrm -lXau -lXdmcp -lX11 -lcocosdenshion -lrt -lz \
+		-lcocos2d -lSDL -lSDL_mixer -lGL -lXext -lXxf86vm -ldrm -lXau -lXdmcp -lX11 -lcocosdenshion -lrt -lz \
 		-Wl,-rpath,../../lib/linux/Debug \
 		-Wl,-rpath,../../lib/xserver
 

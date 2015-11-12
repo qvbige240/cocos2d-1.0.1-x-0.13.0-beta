@@ -10,10 +10,19 @@
 #include "stdlib.h"
 #include "assert.h"
 #include "string.h"
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
 
 #define szMusicSuffix "|"
 
 namespace CocosDenshion {
+
+struct AudioSource
+{
+	Mix_Chunk* pMixFile;
+	char pName[64];
+	int  nFileID;
+};
 
 SDLAudioPlayer* SDLAudioPlayer::sharedPlayer() {
 	static SDLAudioPlayer s_SharedPlayer;
@@ -41,183 +50,168 @@ SDLAudioPlayer::SDLAudioPlayer() :
 }
 
 void SDLAudioPlayer::init() {
-// 	//init
-// 	FMOD_RESULT result;
-// 	FMOD::ChannelGroup *masterChannelGroup;
-// 
-// 	unsigned int version;
-// 	/*
-// 	 Create a System object and initialize.
-// 	 */
-// 	result = FMOD::System_Create(&pSystem);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = pSystem->setOutput(FMOD_OUTPUTTYPE_ALSA);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = pSystem->init(32, FMOD_INIT_NORMAL, 0);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = pSystem->createChannelGroup("Channel Group", &pChannelGroup);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = pSystem->getMasterChannelGroup(&masterChannelGroup);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = masterChannelGroup->addGroup(pChannelGroup);
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	mapEffectSound.clear();
+ 	//init
+	if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096)==-1)
+	{
+		fprintf(stderr, "Mix_OpenAudio: %s\n", Mix_GetError());
+		m_bIsInitAudio = false;
+		//exit(2);
+	}
+	else
+	{
+		m_bIsInitAudio = true;
+		fprintf(stderr, "Mix_OpenAudio: Success\n");
+	}
+	//Mix_AllocateChannels(128);
 
+	m_nCurrentFileID = 0;
+	m_nCurrentBackgroundMusicID = -1;
+
+	m_nEffectVolume = (int)(0.7f*128.0f);
+	m_nMusicVolume = (int)(0.7f*128.0f);
 }
 
 void SDLAudioPlayer::close() {
-// 	FMOD_RESULT result;
-// 	//BGM
-// 	if (pBGMChannel != NULL) {
-// 		result = pBGMChannel->stop();
-// 		ERRCHECKWITHEXIT(result);
-// 		pBGMChannel = 0;
-// 	}
-// 
-// 	if (pMusic != NULL) {
-// 		result = pMusic->release();
-// 		ERRCHECKWITHEXIT(result);
-// 		pMusic = 0;
-// 	}
-// 
-// 	result = pChannelGroup->release();
-// 	ERRCHECKWITHEXIT(result);
-// 	sMusicPath.clear();
-// 
-// 	result = pSystem->close();
-// 	ERRCHECKWITHEXIT(result);
-// 	result = pSystem->release();
-// 	ERRCHECKWITHEXIT(result);
-
 	init();
+	if (m_bIsInitAudio)
+		Mix_CloseAudio();
 }
 
 SDLAudioPlayer::~SDLAudioPlayer() {
-// 	FMOD_RESULT result;
-// 	//BGM
-// 	if (pBGMChannel != NULL) {
-// 		result = pBGMChannel->stop();
-// 		ERRCHECKWITHEXIT(result);
-// 	}
-// 
-// 	if (pMusic != NULL) {
-// 		result = pMusic->release();
-// 		ERRCHECKWITHEXIT(result);
-// 	}
-// 
-// 	result = pChannelGroup->release();
-// 	ERRCHECKWITHEXIT(result);
-// 
-// 	result = pSystem->close();
-// 	ERRCHECKWITHEXIT(result);
-// 	result = pSystem->release();
-// 	ERRCHECKWITHEXIT(result);
+
+}
+
+AudioSource* SDLAudioPlayer::CheckMusicAlreadyLoad(const char * path)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pMusicMixerList.begin();iter != m_pMusicMixerList.end();iter++)
+	{
+		if(!strcmp((*iter)->pName,path))
+		{
+			printf("%s\n",path);
+			return *iter;
+		}
+	}
+	return NULL;
+}
+bool SDLAudioPlayer::RemoveMusicWithFile(int ID)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pMusicMixerList.begin();iter != m_pMusicMixerList.end();iter++)
+	{
+		if((*iter)->nFileID == ID)
+		{
+			Mix_FreeChunk((*iter)->pMixFile);
+			m_pMusicMixerList.erase(iter);
+			return true;
+		}
+	}
+	return false;
+}
+AudioSource* SDLAudioPlayer::GetMusicWithID(int nID)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pMusicMixerList.begin();iter != m_pMusicMixerList.end();iter++)
+	{
+		if((*iter)->nFileID == nID)
+		{
+			return *iter;
+		}
+	}
+	return NULL;
 }
 
 // BGM
 void SDLAudioPlayer::preloadBackgroundMusic(const char* pszFilePath) {
-// 	FMOD_RESULT result;
-// 	pSystem->update();
-// 	string sNewMusicPath = string(pszFilePath) + szMusicSuffix;
-// 	if (pMusic && sNewMusicPath != sMusicPath) {
-// 		//release old
-// 		result = pMusic->release();
-// 		ERRCHECKWITHEXIT(result);
-// 
-// 		sMusicPath = sNewMusicPath;
-// 
-// 	}
-// 
-// 	result = pSystem->createSound(pszFilePath, FMOD_LOOP_NORMAL, 0, &pMusic);
-// 	ERRCHECK(result);
+	if(!m_bIsInitAudio)
+		return;
+
+	if(strlen(pszFilePath) > 60)
+	{
+		printf("=== Error:Sound file name too long!\n");
+		return;
+	}
+
+	if(CheckMusicAlreadyLoad(pszFilePath) != NULL)
+		return;
+	printf("Add New Sound\n");
+	AudioSource* Source = new AudioSource();
+	Source->pMixFile = Mix_LoadWAV(pszFilePath);
+	strcpy(Source->pName,pszFilePath);
+
+	if(Source->pMixFile == NULL){
+		fprintf(stderr, "Error-Mix_LoadWAV: %s------%s\n", Mix_GetError(),pszFilePath);
+		delete Source;
+	}
+
+	Source->nFileID = m_nCurrentFileID;
+	m_nCurrentFileID++;
+
+	m_pMusicMixerList.push_back(Source);
+
+	printf("===CurrentAudioFile%d\n",m_nCurrentFileID);
 }
 
 void SDLAudioPlayer::playBackgroundMusic(const char* pszFilePath, bool bLoop) {
-// 	pSystem->update();
-// 	if (pMusic == NULL) {
-// 		//did not load it
-// 		//load the new music
-// 		FMOD_RESULT result = pSystem->createSound(pszFilePath, FMOD_LOOP_NORMAL,
-// 				0, &pMusic);
-// 		if (!ERRCHECK(result)) {
-// 			sMusicPath = string(pszFilePath) + szMusicSuffix;
-// 		}
-// 
-// 	} else {
-// 		string sNewMusicPath = string(pszFilePath) + szMusicSuffix;
-// 		if (pBGMChannel) {
-// 			pBGMChannel->stop();
-// 			pBGMChannel = 0;
-// 		}
-// 
-// 		if (sNewMusicPath != sMusicPath) {
-// 
-// 			pMusic->release();
-// 			//load the new music
-// 			FMOD_RESULT result = pSystem->createSound(pszFilePath,
-// 					FMOD_LOOP_NORMAL, 0, &pMusic);
-// 
-// 			if (!ERRCHECK(result)) {
-// 				sMusicPath = sNewMusicPath;
-// 			}
-// 		}
-// 
-// 	}
-// 
-// 	FMOD_RESULT result = pSystem->playSound(FMOD_CHANNEL_FREE, pMusic, true,
-// 			&pBGMChannel);
-// 	if (!ERRCHECK(result)) {
-// 		pBGMChannel->setLoopCount((bLoop) ? -1 : 1);
-// 		result = pBGMChannel->setPaused(false);
-// 	}
+	if(!m_bIsInitAudio)
+		return;
+
+	stopBackgroundMusic(false);
+
+	preloadBackgroundMusic(pszFilePath);
+
+	AudioSource *Source;
+	Source = CheckMusicAlreadyLoad(pszFilePath);
+	if(bLoop)
+	{
+		Source->nFileID = Mix_PlayChannel(Source->nFileID, Source->pMixFile, -1);
+	}
+	else
+	{
+		Source->nFileID = Mix_PlayChannel(Source->nFileID, Source->pMixFile, 0);
+	}
+	m_nCurrentBackgroundMusicID = Source->nFileID;
+
+	printf("CurrentBackGround ID ---%d\n",Source->nFileID);
+
+	Mix_Volume(Source->nFileID, m_nMusicVolume);
 }
 
 void SDLAudioPlayer::stopBackgroundMusic(bool bReleaseData) {
-// 	FMOD_RESULT result;
-// 	pSystem->update();
-// 
-// 	if (pBGMChannel == NULL || pMusic == NULL) {
-// 		return;
-// 	}
-// 	if (bReleaseData) {
-// 		result = pBGMChannel->stop();
-// 		ERRCHECKWITHEXIT(result);
-// 		result = pMusic->release();
-// 		ERRCHECKWITHEXIT(result);
-// 		pBGMChannel = 0;
-// 		pMusic = 0;
-// 	} else {
-// 		result = pBGMChannel->stop();
-// 		ERRCHECKWITHEXIT(result);
-// 		pBGMChannel = 0;
-// 	}
-// 	sMusicPath.clear();
-
+	if (m_nCurrentBackgroundMusicID != -1)
+	{
+		AudioSource* Source;
+		Source = GetMusicWithID(m_nCurrentBackgroundMusicID);
+		Mix_HaltChannel(m_nCurrentBackgroundMusicID);
+		if(bReleaseData)
+		{
+			RemoveMusicWithFile(m_nCurrentBackgroundMusicID);
+			delete Source;
+		}
+		m_nCurrentBackgroundMusicID = -1;
+	}
 }
 
 void SDLAudioPlayer::pauseBackgroundMusic() {
-// 	if (pBGMChannel == NULL) {
-// 		return;
-// 	}
-// 	pSystem->update();
-// 	FMOD_RESULT result = pBGMChannel->setPaused(true);
-// 	ERRCHECKWITHEXIT(result);
+	if(m_nCurrentBackgroundMusicID != -1)
+		Mix_HaltChannel(m_nCurrentBackgroundMusicID);
 
+	//
+// 	if(m_nCurrentBackgroundMusicID != -1)
+// 		Mix_Pause(m_nCurrentBackgroundMusicID);
 }
 
 void SDLAudioPlayer::resumeBackgroundMusic() {
-// 	if (pBGMChannel == NULL) {
-// 		return;
-// 	}
-// 	pSystem->update();
-// 	FMOD_RESULT result = pBGMChannel->setPaused(false);
-// 	ERRCHECKWITHEXIT(result);
+	if (m_nCurrentBackgroundMusicID != -1)
+	{
+		printf("Resume\n");
+		AudioSource* Source;
+		Source = GetMusicWithID(m_nCurrentBackgroundMusicID);
+
+		stopBackgroundMusic(false);
+		Mix_PlayChannel(Source->nFileID, Source->pMixFile, -1);
+		m_nCurrentBackgroundMusicID = Source->nFileID;
+	}
 }
 
 void SDLAudioPlayer::rewindBackgroundMusic() {
@@ -235,198 +229,176 @@ bool SDLAudioPlayer::willPlayBackgroundMusic() {
 }
 
 bool SDLAudioPlayer::isBackgroundMusicPlaying() {
-	bool bPlaying;
-// 	if (pBGMChannel == NULL) {
-// 		return false;
-// 	}
-// 	pSystem->update();
-// 	FMOD_RESULT result = pBGMChannel->isPlaying(&bPlaying);
-// 	ERRCHECKWITHEXIT(result);
-	return bPlaying;
 
+	return Mix_PlayingMusic();
 }
 
 float SDLAudioPlayer::getBackgroundMusicVolume() {
-	float fVolumn;
-// 	if (pBGMChannel == NULL) {
-// 		return 0;
-// 	}
-// 	pSystem->update();
-// 	FMOD_RESULT result = pBGMChannel->getVolume(&fVolumn);
-// 	ERRCHECKWITHEXIT(result);
-	return fVolumn;
+	return (float)m_nMusicVolume / 128.0f;
 }
 
 void SDLAudioPlayer::setBackgroundMusicVolume(float volume) {
-// 	if (pBGMChannel == NULL) {
-// 		return;
-// 	}
-// 	pSystem->update();
-// 	FMOD_RESULT result = pBGMChannel->setVolume(volume);
-// 	ERRCHECKWITHEXIT(result);
+	m_nMusicVolume = volume*128.0f;
 
+	if(!m_bIsInitAudio)
+		return;
+
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pMusicMixerList.begin();iter != m_pMusicMixerList.end();iter++)
+	{
+		//printf("CurrentBackGround ID ---%d\n",(*iter)->nFileID);
+		Mix_Volume((*iter)->nFileID, (int)m_nMusicVolume);
+	}
 }
 //~BGM
 
 // for sound effects
+
+bool SDLAudioPlayer::RemoveEffectsWithFile(int ID)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin();iter != m_pEffectMixerList.end();iter++)
+	{
+		if((*iter)->nFileID == ID)
+		{
+			Mix_FreeChunk((*iter)->pMixFile);
+			m_pEffectMixerList.erase(iter);
+			return true;
+		}
+	}
+	return false;
+}
+AudioSource* SDLAudioPlayer::CheckEffectAlreadyLoad(const char * path)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin();iter != m_pEffectMixerList.end();iter++)
+	{
+		if(!strcmp((*iter)->pName,path))
+		{
+			return *iter;
+		}
+	}
+	return NULL;
+}
+AudioSource* SDLAudioPlayer::GetEffectWithID(int nID)
+{
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin();iter != m_pEffectMixerList.end();iter++)
+	{
+		if((*iter)->nFileID == nID)
+		{
+			return *iter;
+		}
+	}
+	return NULL;
+}
+
 float SDLAudioPlayer::getEffectsVolume() {
-// 	float fVolumn;
-// 	pSystem->update();
-// 	FMOD_RESULT result = pChannelGroup->getVolume(&fVolumn);
-// 	ERRCHECKWITHEXIT(result);
+	return (float)m_nEffectVolume / 128.0f;
 }
 
 void SDLAudioPlayer::setEffectsVolume(float volume) {
-// 	pSystem->update();
-// 	FMOD_RESULT result = pChannelGroup->setVolume(volume);
-// 	ERRCHECKWITHEXIT(result);
-
+	Mix_Volume(-1, (int)(volume*128.0f));
 }
 
 unsigned int SDLAudioPlayer::playEffect(const char* pszFilePath, bool bLoop) {
-// 	FMOD::Channel* pChannel;
-// 	FMOD::Sound* pSound = NULL;
-// 
-// 	do {
-// 		pSystem->update();
-// 
-// 		map<string, FMOD::Sound*>::iterator l_it = mapEffectSound.find(
-// 				string(pszFilePath));
-// 		if (l_it == mapEffectSound.end()) {
-// 			//no load it yet
-// 			preloadEffect(pszFilePath);
-// 			l_it = mapEffectSound.find(string(pszFilePath));
-// 		}
-// 		pSound = l_it->second;
-// 		if (pSound==NULL){
-// 			break;
-// 		}
-// 
-// 		FMOD_RESULT result = pSystem->playSound(FMOD_CHANNEL_FREE, pSound, true,
-// 				&pChannel);
-// 
-// 		if (ERRCHECK(result)) {
-// 			printf("sound effect in %s could not be played", pszFilePath);
-// 			break;
-// 		}
-// 
-// 		pChannel->setChannelGroup(pChannelGroup);
-// 
-// 		//set its loop
-// 		pChannel->setLoopCount((bLoop) ? -1 : 1);
-// 		result = pChannel->setPaused(false);
-// 
-// 		mapEffectSoundChannel[iSoundChannelCount] = pChannel;
-// 		return iSoundChannelCount++;
-// 	} while (0);
+	if(!m_bIsInitAudio)
+		return 0;
 
-	return 0;
+	AudioSource* Source;
+	Source = (AudioSource*)preloadEffect(pszFilePath);
+	if (!Source)
+		return 0;
+	
+	if(bLoop)
+	{
+		Source->nFileID = Mix_PlayChannel(-1, Source->pMixFile, -1);
+	}
+	else
+	{
+		Source->nFileID = Mix_PlayChannel(-1, Source->pMixFile, 0);
+	}
+	Mix_Volume(Source->nFileID, m_nEffectVolume);
+	return Source->nFileID;
 }
 
 void SDLAudioPlayer::stopEffect(unsigned int nSoundId) {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.find(nSoundId);
-// 	if (l_it == mapEffectSoundChannel.end()) {
-// 		//no play  yet
-// 		return;
-// 	}
-// 	pChannel = l_it->second;
-// 	//stop the channel;
-// 	pChannel->stop();
-// 
-// 	//delete from the map;
-// 	mapEffectSoundChannel.erase(nSoundId);
+
+	AudioSource* Source = GetEffectWithID(nSoundId);
+	if (Source)
+	{
+		Mix_HaltChannel(nSoundId);
+		RemoveEffectsWithFile(nSoundId);
+		delete Source;
+	}
 }
 
 void SDLAudioPlayer::pauseEffect(unsigned int uSoundId) {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.find(uSoundId);
-// 	if (l_it == mapEffectSoundChannel.end()) {
-// 		//no play  yet
-// 		return;
-// 	}
-// 	pChannel = l_it->second;
-// 	//pause the channel;
-// 	pChannel->setPaused(true);
+	AudioSource* Source = GetEffectWithID(uSoundId);
+	if (Source)
+	{
+		Mix_Pause(uSoundId);
+	}
 }
 
 void SDLAudioPlayer::pauseAllEffects() {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.begin();
-// 	
-// 	for (; l_it != mapEffectSoundChannel.end(); l_it++) {
-// 		pChannel = l_it->second;
-// 		//pause the channel;
-// 		pChannel->setPaused(true);
-// 	}
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin(); iter != m_pEffectMixerList.end(); iter++)
+	{
+		Mix_Pause((*iter)->nFileID);
+	}
 }
 
 void SDLAudioPlayer::resumeEffect(unsigned int uSoundId) {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.find(uSoundId);
-// 	if (l_it == mapEffectSoundChannel.end()) {
-// 		//no play  yet
-// 		return;
-// 	}
-// 
-// 	pChannel = l_it->second;
-// 	//resume the channel;
-// 	pChannel->setPaused(false);
+	AudioSource* Source = GetEffectWithID(uSoundId);
+	if (Source)
+	{
+		Mix_Resume(uSoundId);
+	}
 }
 
 void SDLAudioPlayer::resumeAllEffects() {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.begin();
-// 	
-// 	for (; l_it != mapEffectSoundChannel.end(); l_it++) {
-// 		pChannel = l_it->second;
-// 		//resume the channel;
-// 		pChannel->setPaused(false);
-// 	}
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin(); iter != m_pEffectMixerList.end(); iter++)
+	{
+		Mix_Resume((*iter)->nFileID);
+	}
 }
 
 void SDLAudioPlayer::stopAllEffects() {
-// 	FMOD::Channel* pChannel;
-// 	pSystem->update();
-// 
-// 	map<unsigned int, FMOD::Channel*>::iterator l_it =
-// 			mapEffectSoundChannel.begin();
-// 	
-// 	for (; l_it != mapEffectSoundChannel.end(); l_it++) {
-// 		pChannel = l_it->second;
-// 		//resume the channel;
-// 		pChannel->stop();
-// 	}
-// 
-// 	mapEffectSoundChannel.clear();
+	std::vector<AudioSource*>::iterator iter;
+	for(iter = m_pEffectMixerList.begin(); iter != m_pEffectMixerList.end(); iter++)
+	{
+		Mix_HaltChannel((*iter)->nFileID);
+		Mix_FreeChunk((*iter)->pMixFile);
+		m_pEffectMixerList.erase(iter);
+		delete (*iter);
+	}
 }
 
-void SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
-// 	FMOD::Sound* pLoadSound;
-// 
-// 	pSystem->update();
-// 	FMOD_RESULT result = pSystem->createSound(pszFilePath, FMOD_LOOP_NORMAL, 0,
-// 			&pLoadSound);
-// 	if (ERRCHECK(result)){
-// 		printf("sound effect in %s could not be preload", pszFilePath);
-// 		return;
-// 	}
-// 	mapEffectSound[string(pszFilePath)] = pLoadSound;
+void* SDLAudioPlayer::preloadEffect(const char* pszFilePath) {
+	if(!m_bIsInitAudio)
+		return NULL;
+
+	if(strlen(pszFilePath) > 60)
+		return NULL;
+	AudioSource* Source = CheckEffectAlreadyLoad(pszFilePath);
+	if( Source != NULL)
+		return Source;
+
+	printf("Add New Sound\n");
+
+	Source = new AudioSource();
+	Source->pMixFile = Mix_LoadWAV(pszFilePath);
+	strcpy(Source->pName, pszFilePath);
+	Source->nFileID = -1;
+	if(Source->pMixFile == NULL){
+		fprintf(stderr, "Mix_LoadWAV: %s\n", Mix_GetError());
+		delete Source;
+		//exit(1);
+	}
+	m_pEffectMixerList.push_back(Source);
+	return Source;
 }
 
 void SDLAudioPlayer::unloadEffect(const char* pszFilePath) {

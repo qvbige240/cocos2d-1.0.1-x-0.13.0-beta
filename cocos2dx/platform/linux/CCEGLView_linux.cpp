@@ -193,7 +193,7 @@ bool CCEGLView::Create(const char* pTitle, int iPixelWidth, int iPixelHeight, in
 // 		exit(1);
 // 
 	const SDL_VideoInfo* info = SDL_GetVideoInfo();
-	screen = SDL_SetVideoMode( 800, 600, info->vfmt->BitsPerPixel, SDL_HWSURFACE | SDL_OPENGL | SDL_FULLSCREEN);
+	screen = SDL_SetVideoMode( 800, 600, info->vfmt->BitsPerPixel, SDL_HWSURFACE | SDL_OPENGL/* | SDL_FULLSCREEN*/);
 	//pScreen = SDL_SetVideoMode( iPixelWidth, iPixelHeight, info->vfmt->BitsPerPixel, SDL_SWSURFACE /*| SDL_FULLSCREEN */);
 
 // 	if(EGL_Init()) 
@@ -312,6 +312,8 @@ void CCEGLView::HandleEvents()
 		case SDL_MOUSEBUTTONDOWN:
 			if (m_pTouch && m_pDelegate)
 			{
+				CCLOG("SDL mouse down!!\n");
+				printf("SDL mouse down!\n");
 				CCPoint cur_point((float)event.button.x, (float)event.button.y);
 				if (CCRect::CCRectContainsPoint(m_rcViewPort, cur_point))
 				{

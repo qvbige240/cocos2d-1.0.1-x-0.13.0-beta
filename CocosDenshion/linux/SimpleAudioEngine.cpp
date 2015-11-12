@@ -86,7 +86,7 @@ void SimpleAudioEngine::stopEffect(unsigned int nSoundId) {
 	return oAudioPlayer->stopEffect(nSoundId);
 }
 
-void SimpleAudioEngine::preloadEffect(const char* pszFilePath) {
+void* SimpleAudioEngine::preloadEffect(const char* pszFilePath) {
 	return oAudioPlayer->preloadEffect(pszFilePath);
 }
 

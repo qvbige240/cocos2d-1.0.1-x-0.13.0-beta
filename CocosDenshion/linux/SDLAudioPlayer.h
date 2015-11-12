@@ -12,12 +12,15 @@
 // #include "fmod_errors.h"
 #include "AudioPlayer.h"
 #include "string"
+#include <vector>
 #include <map>
 
 
 using namespace std;
 
 namespace CocosDenshion {
+
+typedef struct AudioSource AudioSource;
 
 class SDLAudioPlayer : public AudioPlayer{
 public:
@@ -28,7 +31,12 @@ public:
 
 	virtual void close();
 
-
+	AudioSource* CheckMusicAlreadyLoad(const char * path);
+	bool RemoveMusicWithFile(int ID);
+	AudioSource* GetMusicWithID(int nID);
+	AudioSource* CheckEffectAlreadyLoad(const char * path);
+	bool RemoveEffectsWithFile(int ID);
+	AudioSource* GetEffectWithID(int nID);
 
 	/**
 	 @brief Preload background music
@@ -114,7 +122,7 @@ public:
 	 @details	    the compressed audio will be decode to wave, then write into an
 	 internal buffer in SimpleaudioEngine
 	 */
-	virtual void preloadEffect(const char* pszFilePath);
+	virtual void* preloadEffect(const char* pszFilePath);
 
 	/**
 	 @brief  		unload the preloaded effect from internal buffer
@@ -164,6 +172,19 @@ private:
 	unsigned int iSoundChannelCount;
 
 	string sMusicPath;
+
+
+
+	std::vector<AudioSource*> m_pMusicMixerList;
+	std::vector<AudioSource*> m_pEffectMixerList;
+
+	int m_nCurrentFileID;
+	int m_nCurrentBackgroundMusicID;
+
+	float m_nMusicVolume;
+	float m_nEffectVolume;
+
+	bool m_bIsInitAudio;
 
 };
 
