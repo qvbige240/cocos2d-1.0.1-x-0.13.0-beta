@@ -3,7 +3,10 @@ envdefense
 projects/
 *~
 *.swp
-tmp
+*tmp
+*[_.]bak
+log.txt
+
 #ignore thumbnails created by windows
 Thumbs.db
 #Ignore files build by Visual Studio
@@ -37,7 +40,7 @@ _ReSharper*/
 #libs/
 bin/
 obj/
-assets/
+#assets/
 .classpath
 .project
 .cproject

@@ -1,8 +1,22 @@
 # set params
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-NDK_ROOT=__ndkroot__
-COCOS2DX_ROOT=__cocos2dxroot__
-GAME_ROOT=$COCOS2DX_ROOT/projects/__projectname__
+#NDK_ROOT=__ndkroot__
+#COCOS2DX_ROOT=__cocos2dxroot__
+#GAME_ROOT=$COCOS2DX_ROOT/projects/__projectname__
+#GAME_ANDROID_ROOT=$GAME_ROOT/android
+#RESOURCE_ROOT=$GAME_ROOT/Resources
+
+NDK_MODULE_PATH="$DIR/../../cocos2d-1.0.1-x-0.13.0-beta"
+if [ ! -d "$NDK_MODULE_PATH" ]; then
+    NDK_MODULE_PATH="$DIR/../../../cocos2d-1.0.1-x-0.13.0-beta/workspace"
+fi
+
+COCOS2DX_ROOT="$DIR/../../cocos2d-1.0.1-x-0.13.0-beta"
+if [ ! -d "$COCOS2DX_ROOT" ]; then
+    COCOS2DX_ROOT="$DIR/../../../cocos2d-1.0.1-x-0.13.0-beta/workspace"
+fi
+
+GAME_ROOT="$DIR/.."
 GAME_ANDROID_ROOT=$GAME_ROOT/android
 RESOURCE_ROOT=$GAME_ROOT/Resources
 
