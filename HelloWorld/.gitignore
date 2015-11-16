@@ -1,12 +1,13 @@
 tags
-envdefense
-projects/
 *~
-*[_.]swp
 *tmp
+*[_.]swp
 *[_.]bak
 log.txt
 auto.prop
+.ant-targets-build.xml
+verabout.prop
+._.*
 
 #ignore thumbnails created by windows
 Thumbs.db
@@ -38,9 +39,10 @@ _ReSharper*/
 [Tt]est[Rr]esult*
 
 # Ignore Android SDK, NDK, Eclipse plugin and ANT files
-#libs/
+libs/
 bin/
 obj/
+gen/
 #assets/
 .classpath
 .project

@@ -43,6 +43,10 @@ copy_cpp_h_from_helloworld(){
             cp $file $APP_DIR/Classes
         fi
     done
+
+    if [ -f $HELLOWORLD_ROOT/.gitignore ]; then
+        cp $HELLOWORLD_ROOT/.gitignore $APP_DIR/
+    fi
 }
 
 # copy resources
