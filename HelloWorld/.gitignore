@@ -8,6 +8,9 @@ auto.prop
 .ant-targets-build.xml
 verabout.prop
 ._.*
+*.rar
+*.tgz
+*.gz
 
 #ignore thumbnails created by windows
 Thumbs.db

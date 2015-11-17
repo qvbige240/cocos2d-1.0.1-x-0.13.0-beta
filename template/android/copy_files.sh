@@ -33,6 +33,17 @@ move_files_into_android(){
             mv $file $APP_DIR/android
         fi
     done
+
+
+    if [ -f $HELLOWORLD_ROOT/android/ant.properties ]; then
+        cp $HELLOWORLD_ROOT/android/ant.properties $APP_DIR/android
+    fi
+    if [ -f $HELLOWORLD_ROOT/android/custom_rules.xml ]; then
+        cp $HELLOWORLD_ROOT/android/custom_rules.xml $APP_DIR/android
+    fi
+    if [ -f $HELLOWORLD_ROOT/android/release.sh ]; then
+        cp $HELLOWORLD_ROOT/android/release.sh $APP_DIR/android
+    fi
 }
 
 copy_cpp_h_from_helloworld(){
