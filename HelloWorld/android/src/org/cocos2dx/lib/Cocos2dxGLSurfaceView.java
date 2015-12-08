@@ -192,11 +192,11 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
             }
         });
     	
-    	super.onPause();
+    	//super.onPause();
     }
     
     public void onResume(){
-    	super.onResume();
+    	//super.onResume();
     	
     	queueEvent(new Runnable() {
             @Override

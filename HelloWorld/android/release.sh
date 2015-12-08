@@ -15,6 +15,10 @@ function mk_nativebuild()
         rm -rf gen
     fi
     bash build_native.sh
+    if [ $? -ne 0 ]
+    then
+        return 1
+    fi
 }
 
 function mk_antbuild()
@@ -22,5 +26,20 @@ function mk_antbuild()
     ant clean > $LOG_FILE
     ant auto-release -Dversion=time >> $LOG_FILE
 }
-mk_nativebuild $1
-mk_antbuild
+
+function release()
+{
+    mk_nativebuild $1
+    if [ $? -ne 0 ]
+    then
+        return 1
+    fi
+
+    mk_antbuild
+    if [ $? -ne 0 ]
+    then
+        return 1
+    fi
+}
+
+release $1
