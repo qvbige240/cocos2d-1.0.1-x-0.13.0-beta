@@ -44,6 +44,9 @@ move_files_into_android(){
     if [ -f $HELLOWORLD_ROOT/android/release.sh ]; then
         cp $HELLOWORLD_ROOT/android/release.sh $APP_DIR/android
     fi
+    if [ -f $HELLOWORLD_ROOT/android/etc.profile ]; then
+        cp $HELLOWORLD_ROOT/android/etc.profile $APP_DIR/android
+    fi
 }
 
 copy_cpp_h_from_helloworld(){
