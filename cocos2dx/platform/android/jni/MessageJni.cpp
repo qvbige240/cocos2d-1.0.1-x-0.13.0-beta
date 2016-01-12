@@ -66,7 +66,7 @@ extern "C"
 	            CCApplication::sharedApplication().applicationWillEnterForeground();
 			}
 	}
-
+/*
 	//hx: for gen4
 	void Java_org_cocos2dx_lib_Cocos2dxRenderer_nativeEntOff()
 	{
@@ -81,7 +81,7 @@ extern "C"
 	}
 	//end
 	
-	
+	*/
 	void showMessageBoxJNI(const char * pszMsg, const char * pszTitle)
 	{
 		if (! pszMsg)
