@@ -30,6 +30,9 @@
 
 #ifndef GOOGLE_PROTOBUF_MACROS_H__
 #define GOOGLE_PROTOBUF_MACROS_H__
+
+#ifndef _WIN32
+
 /* build-aux/config.h.  Generated from config.h.in by configure.  */
 /* build-aux/config.h.in.  Generated from configure.ac by autoheader.  */
 
@@ -101,6 +104,7 @@
 /* Version number of package */
 #define VERSION "1.7.0"
 
+#endif //_WIN32
 #include <google/protobuf/stubs/port.h>
 
 namespace google {
