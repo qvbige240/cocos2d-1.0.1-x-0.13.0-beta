@@ -62,7 +62,15 @@ typedef enum LanguageType
     kLanguageItalian,
     kLanguageGerman,
     kLanguageSpanish,
-    kLanguageRussian
+    kLanguageRussian,
+	kLanguageJanpanese,
+	kLanguagePortuguese,
+	kLanguageKorean,
+	kLanguageIndonesian,
+	kLanguageThai,
+	kLanguageDutch,
+	kLanguageArab,
+	kLanguagePolish,
 } ccLanguageType;
 
 NS_CC_END;
