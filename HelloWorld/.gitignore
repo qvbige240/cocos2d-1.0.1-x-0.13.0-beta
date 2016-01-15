@@ -46,7 +46,7 @@ libs/
 bin/
 obj/
 gen/
-#assets/
+assets/
 .classpath
 .project
 .cproject
