@@ -11,6 +11,12 @@ verabout.prop
 *.rar
 *.tgz
 *.gz
+EXT3/
+ext3/
+GEN3/
+gen3/
+build/
+autom4te.cache/
 
 #ignore thumbnails created by windows
 Thumbs.db
