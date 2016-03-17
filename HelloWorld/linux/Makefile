@@ -19,7 +19,7 @@ OBJECTS = ./main.o \
         ../Classes/HelloWorldScene.o 
 
 STATICLIBS =  
-SHAREDLIBS = -L../../lib/linux/Debug -lcocos2d -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/
+SHAREDLIBS = -L../../lib/linux/Debug -L../../../final/lib/ -lcocos2d -lglfw -lGL -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/,-rpath,../../../final/lib/
 
 #$(shell ../../build-linux.sh $<)
 ####### Build rules

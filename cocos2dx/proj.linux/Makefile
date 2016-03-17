@@ -11,7 +11,8 @@ INCLUDES = -I.. \
 					-I../platform \
 					-I../platform/third_party/linux/libpng \
 					-I../platform/third_party/linux/libxml2 \
-					-I../platform/third_party/linux/libjpeg 
+					-I../platform/third_party/linux/libjpeg \
+					-I../../../final/include 
 					
 # add -DUSE_FONTCONFIG if you want to use libfontconfig 					
 DEFINES = -DLINUX 
