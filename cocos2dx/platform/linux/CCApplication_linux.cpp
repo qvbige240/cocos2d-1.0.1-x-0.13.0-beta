@@ -14,6 +14,7 @@ NS_CC_BEGIN;
 
 // sharedApplication pointer
 CCApplication * CCApplication::sm_pSharedApplication = 0;
+ccLanguageType languagetype = kLanguageEnglish;
 
 static long getCurrentMillSecond() {
 	long lLastTime;
@@ -97,7 +98,40 @@ CCApplication& CCApplication::sharedApplication()
 ccLanguageType CCApplication::getCurrentLanguage()
 {
 	//TODO
-	return kLanguageEnglish;
+    //printf("get language: %d\n", languagetype);
+	return languagetype;
 }
 
+void CCApplication::setCurrentLanguage(int tag)
+{
+  switch(tag)
+  {
+  	  case 0:
+  	  {
+  		languagetype = kLanguageEnglish;
+  	  }
+  	  break;
+  	  case 1:
+  	  {
+  		languagetype = kLanguageChinese;
+  	  }
+  	  break;
+      case 2:
+  	  {
+  		languagetype = kLanguageFrench;
+  	  }
+  	  break;
+      case 3:
+  	  {
+  		languagetype = kLanguageItalian;
+  	  }
+  	  break;
+      case 4:
+  	  {
+  		languagetype = kLanguageGerman;
+  	  }
+  	  break;
+  }
+  printf("set language: %d\n", languagetype);
+}
 NS_CC_END;

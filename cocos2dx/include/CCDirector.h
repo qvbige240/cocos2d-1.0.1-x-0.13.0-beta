@@ -224,6 +224,7 @@ public:
 	 */
 	bool isHandset() {return m_bHandset;}
 	bool checkHandset(void);
+    void setHandset(bool bHandset);
 
 	// window size
 
