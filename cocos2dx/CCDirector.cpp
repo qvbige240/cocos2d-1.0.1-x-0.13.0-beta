@@ -472,6 +472,13 @@ bool CCDirector::checkHandset(void)
 	return m_bHandset;
 }
 
+void CCDirector::setHandset(bool bHandset)
+{
+        m_bHandset = bHandset;
+            printf("===set handset is %s\n", bHandset == true ? "true" : "false");
+
+}
+
 CCSize CCDirector::getWinSize(void)
 {
 	CCSize s = m_obWinSizeInPoints;
