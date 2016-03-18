@@ -474,6 +474,7 @@ protected:
 
 	/* whether or not handset */
 	bool m_bHandset;
+    bool m_bSetting;
 
 	/* Projection protocol delegate */
 	CCProjectionProtocol *m_pProjectionDelegate;

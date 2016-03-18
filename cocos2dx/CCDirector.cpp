@@ -106,6 +106,9 @@ bool CCDirector::init(void)
 
 	// paused ?
 	m_bPaused = false;
+
+    m_bHandset = false;
+    m_bSetting = false;
 	
 	// purge ?
 	m_bPurgeDirecotorInNextLoop = false;
@@ -458,6 +461,11 @@ bool CCDirector::checkHandset(void)
 {
 	CCRect cc_rect = s_sharedDirector.getOpenGLView()->getViewPort();
 	
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    if (m_bSetting == true)
+        return m_bHandset;
+#endif
+
 	if (cc_rect.size.width > 1024 && cc_rect.size.height > 600)
 	{
 		m_bHandset = true;
@@ -475,7 +483,8 @@ bool CCDirector::checkHandset(void)
 void CCDirector::setHandset(bool bHandset)
 {
         m_bHandset = bHandset;
-            printf("===set handset is %s\n", bHandset == true ? "true" : "false");
+        m_bSetting = true;
+        printf("===set handset is %s\n", bHandset == true ? "true" : "false");
 
 }
 
