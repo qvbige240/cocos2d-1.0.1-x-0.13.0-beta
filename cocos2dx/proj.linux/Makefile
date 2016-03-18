@@ -1,8 +1,10 @@
 CC      = gcc
 CXX     = g++
 TARGET	= libcocos2d.so
-CCFLAGS = -Wall -g -O2 -fPIC
-CXXFLAGS = -Wall -g -O2 -fPIC
+#CCFLAGS = -Wall -g -O2 -fPIC
+#CXXFLAGS = -Wall -g -O2 -fPIC
+CCFLAGS = -Wall -g -O0 -fPIC
+CXXFLAGS = -Wall -g -O0 -fPIC
 VISIBILITY = 
 
 INCLUDES = -I.. \
