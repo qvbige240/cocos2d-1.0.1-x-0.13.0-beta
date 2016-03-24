@@ -5,13 +5,17 @@ CCFLAGS = -Wall -g -O2
 CXXFLAGS = -Wall -g -O2 
 VISIBILITY = 
 
-INCLUDES = -I../../cocos2dx/platform/third_party/linux \
-            -I../../cocos2dx/include \
-            -I../../cocos2dx \
-            -I../../cocos2dx/platform \
-            -I../../CocosDenshion/include \
-            -I../Classes/ \
-            -I../../../../pc/final/include
+WORK_PATH = ../../..
+COCOS_PATH = $(WORK_PATH)/cocos2d-1.0.1-x-0.13.0-beta
+INSTALL_PATH = $(WORK_PATH)/../pc/final
+
+INCLUDES = -I$(COCOS_PATH)/cocos2dx/platform/third_party/linux \
+            -I$(COCOS_PATH)/cocos2dx/include \
+            -I$(COCOS_PATH)/cocos2dx \
+            -I$(COCOS_PATH)/cocos2dx/platform \
+            -I$(COCOS_PATH)/CocosDenshion/include \
+            -I$(INSTALL_PATH)/include \
+            -I../Classes/
 
 DEFINES = -DLINUX
 
@@ -20,7 +24,7 @@ OBJECTS = ./main.o \
         ../Classes/HelloWorldScene.o 
 
 STATICLIBS =  
-SHAREDLIBS = -L../../lib/linux/Debug -L../../../../pc/final/lib/ -lcocos2d -lglfw -lGL -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/,-rpath,../../../../pc/final/lib/
+SHAREDLIBS = -L$(COCOS_PATH)/lib/linux/Debug -L$(INSTALL_PATH)/lib/ -lcocos2d -lglfw -lGL -lrt -lz -lcocosdenshion -Wl,-rpath,$(COCOS_PATH)/lib/linux/Debug/,-rpath,$(INSTALL_PATH)/lib/
 
 #$(shell ../../build-linux.sh $<)
 ####### Build rules

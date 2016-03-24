@@ -1,11 +1,12 @@
 CC      = gcc
 CXX     = g++
 TARGET	= libcocos2d.so
-#CCFLAGS = -Wall -g -O2 -fPIC
-#CXXFLAGS = -Wall -g -O2 -fPIC
-CCFLAGS = -Wall -g -O0 -fPIC
-CXXFLAGS = -Wall -g -O0 -fPIC
+CCFLAGS = -Wall -g -O2 -fPIC
+CXXFLAGS = -Wall -g -O2 -fPIC
 VISIBILITY = 
+
+WORK_PATH = ../../..
+INSTALL_PATH = $(WORK_PATH)/../pc/final
 
 INCLUDES = -I.. \
 					-I../platform/third_party/linux/libfreetype2 \
@@ -14,8 +15,7 @@ INCLUDES = -I.. \
 					-I../platform/third_party/linux/libpng \
 					-I../platform/third_party/linux/libxml2 \
 					-I../platform/third_party/linux/libjpeg \
-					-I../../../../pc/final/include 
-#					-I../../../../pc/final/include 
+					-I$(INSTALL_PATH)/include
 					
 # add -DUSE_FONTCONFIG if you want to use libfontconfig 					
 DEFINES = -DLINUX 
@@ -125,8 +125,7 @@ STATICLIBS = $(STATICLIBS_DIR)/libfreetype.a \
 						$(STATICLIBS_DIR)/libjpeg.a
 
 # add -lfontconfig if you want to use libfontconfig
-#SHAREDLIBS = -lglfw -lGL
-SHAREDLIBS = 
+SHAREDLIBS = -lglfw -lGL
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 
