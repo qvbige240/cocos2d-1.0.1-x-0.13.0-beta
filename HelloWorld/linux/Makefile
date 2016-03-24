@@ -10,7 +10,8 @@ INCLUDES = -I../../cocos2dx/platform/third_party/linux \
             -I../../cocos2dx \
             -I../../cocos2dx/platform \
             -I../../CocosDenshion/include \
-            -I../Classes/
+            -I../Classes/ \
+            -I../../../../pc/final/include
 
 DEFINES = -DLINUX
 
@@ -19,7 +20,7 @@ OBJECTS = ./main.o \
         ../Classes/HelloWorldScene.o 
 
 STATICLIBS =  
-SHAREDLIBS = -L../../lib/linux/Debug -L../../../final/lib/ -lcocos2d -lglfw -lGL -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/,-rpath,../../../final/lib/
+SHAREDLIBS = -L../../lib/linux/Debug -L../../../../pc/final/lib/ -lcocos2d -lglfw -lGL -lrt -lz -lcocosdenshion -Wl,-rpath,../../lib/linux/Debug/,-rpath,../../../../pc/final/lib/
 
 #$(shell ../../build-linux.sh $<)
 ####### Build rules

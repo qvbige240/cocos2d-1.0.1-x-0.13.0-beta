@@ -14,7 +14,8 @@ INCLUDES = -I.. \
 					-I../platform/third_party/linux/libpng \
 					-I../platform/third_party/linux/libxml2 \
 					-I../platform/third_party/linux/libjpeg \
-					-I../../../final/include 
+					-I../../../../pc/final/include 
+#					-I../../../../pc/final/include 
 					
 # add -DUSE_FONTCONFIG if you want to use libfontconfig 					
 DEFINES = -DLINUX 
@@ -124,7 +125,8 @@ STATICLIBS = $(STATICLIBS_DIR)/libfreetype.a \
 						$(STATICLIBS_DIR)/libjpeg.a
 
 # add -lfontconfig if you want to use libfontconfig
-SHAREDLIBS = -lglfw -lGL
+#SHAREDLIBS = -lglfw -lGL
+SHAREDLIBS = 
 
 ####### Build rules
 $(TARGET): $(OBJECTS) 
