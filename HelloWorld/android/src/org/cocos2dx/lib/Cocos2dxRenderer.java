@@ -26,7 +26,8 @@ package org.cocos2dx.lib;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLSurfaceView;
+//import android.opengl.GLSurfaceView;
+import org.cocos2dx.opengl.*;
 
 public class Cocos2dxRenderer implements GLSurfaceView.Renderer {
 	private final static long NANOSECONDSPERSECOND = 1000000000L;

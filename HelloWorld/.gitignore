@@ -17,6 +17,8 @@ GEN3/
 gen3/
 build/
 autom4te.cache/
+.externalToolBuilders
+.settings
 
 #ignore thumbnails created by windows
 Thumbs.db
