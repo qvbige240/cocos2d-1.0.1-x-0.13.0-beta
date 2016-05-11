@@ -54,6 +54,8 @@ THE SOFTWARE.
 #include "support/CCProfiling.h"
 #endif // CC_ENABLE_PROFILERS
 
+#include "ENVConfig.h"
+
 #include <string>
 
 using namespace std;
@@ -466,6 +468,9 @@ bool CCDirector::checkHandset(void)
         return m_bHandset;
 #endif
 
+#if (ENVEE_FEATURES == env_envee_nohandset)
+    m_bHandset = false;
+#else
 	if (cc_rect.size.width > 1024 && cc_rect.size.height > 600)
 	{
 		m_bHandset = true;
@@ -476,6 +481,8 @@ bool CCDirector::checkHandset(void)
 		m_bHandset = false;
 		CCLog("%s%d====no handset m_obWinSizeInPixels.width = %f!\n", __FILE__, __LINE__, m_obWinSizeInPixels.width);
 	}
+
+#endif
 
 	return m_bHandset;
 }
