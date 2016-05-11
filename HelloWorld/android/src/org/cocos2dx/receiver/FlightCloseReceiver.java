@@ -27,9 +27,9 @@ public class FlightCloseReceiver extends BroadcastReceiver {
 
 		String packageName = context.getPackageName();
 		Log.v("Duz packageName", packageName);
-		// < cocos2dx 2.2.3
+		// < cocos2dx 2.1.5
 		String fileName = "/data/data/"+packageName+"/UserDefault.xml";
-		// >= cocos2dx 2.2.3 
+		// >= cocos2dx 2.1.5 
 		//String fileName = "/data/data/"+packageName+"/shared_prefs/Cocos2dxPrefsFile.xml";
 		Log.v("Duz delete file:", fileName);
 		File file = new File(fileName);
