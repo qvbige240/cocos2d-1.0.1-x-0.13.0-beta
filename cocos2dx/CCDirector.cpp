@@ -470,6 +470,7 @@ bool CCDirector::checkHandset(void)
 
 #if (ENVEE_FEATURES == env_envee_nohandset)
     m_bHandset = false;
+    CCLog("==== touch version. ENVEE_FEATURES: %d \n", ENVEE_FEATURES);
 #else
 	if (cc_rect.size.width > 1024 && cc_rect.size.height > 600)
 	{
@@ -481,7 +482,7 @@ bool CCDirector::checkHandset(void)
 		m_bHandset = false;
 		CCLog("%s%d====no handset m_obWinSizeInPixels.width = %f!\n", __FILE__, __LINE__, m_obWinSizeInPixels.width);
 	}
-
+    CCLog("==== default version.\n");
 #endif
 
 	return m_bHandset;
