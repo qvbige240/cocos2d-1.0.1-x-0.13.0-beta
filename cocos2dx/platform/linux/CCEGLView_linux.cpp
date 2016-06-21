@@ -17,6 +17,7 @@
 #include "CCTouch.h"
 #include "CCTouchDispatcher.h"
 #include "CCIMEDispatcher.h"
+#include "CCKeypadDispatcher.h"
 
 PFNGLGENFRAMEBUFFERSEXTPROC glGenFramebuffersEXT = NULL;
 PFNGLDELETEFRAMEBUFFERSEXTPROC glDeleteFramebuffersEXT = NULL;
@@ -100,6 +101,7 @@ CCEGLView::~CCEGLView()
 {
 }
 
+#if 0
 void keyEventHandle(int iKeyID,int iKeyState) {
 	if (iKeyState ==GLFW_RELEASE) {
 		return;
@@ -113,6 +115,16 @@ void keyEventHandle(int iKeyID,int iKeyState) {
 
 	}
 }
+#else
+void keyEventHandle(int iKeyID,int iKeyState) {
+//	if (iKeyState ==GLFW_RELEASE) {
+//		return;
+//	}
+    
+    printf("press key: %d, state: %d\n", iKeyID, iKeyState);
+    CCKeypadDispatcher::sharedDispatcher()->dispatchKeypadMSG(iKeyID, iKeyState);
+}
+#endif
 
 void charEventHandle(int iCharID,int iCharState) {
 	if (iCharState ==GLFW_RELEASE) {

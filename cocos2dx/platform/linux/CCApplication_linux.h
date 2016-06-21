@@ -88,6 +88,7 @@ public:
 	 @return Current language config
 	 */
 	static ccLanguageType getCurrentLanguage();
+	static void setCurrentLanguage(int tag);
 protected:
     long       m_nAnimationInterval;  //micro second
 

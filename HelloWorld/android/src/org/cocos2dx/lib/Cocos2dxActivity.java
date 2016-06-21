@@ -24,10 +24,14 @@ THE SOFTWARE.
 
 package org.cocos2dx.lib;
 
+import org.cocos2dx.receiver.FlightCloseReceiver;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -36,6 +40,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.media.*;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 
 public class Cocos2dxActivity extends Activity{
     private static Cocos2dxMusic backgroundMusicPlayer;
@@ -45,12 +53,20 @@ public class Cocos2dxActivity extends Activity{
     private static Handler handler;
     private final static int HANDLER_SHOW_DIALOG = 1;
     private static String packageName;
+    private static AudioManager mAudioManager;
+    private static HomeWatcherReceiver mHomeKeyReceiver = null;
+    
+    public static final String ACTION_FLIGHT_CLOSED = "com.thalesifec.intent.action.FDS_FLIGHT_CLOSED";
+    private final BroadcastReceiver flightCloseReceiver = new FlightCloseReceiver();
 
     private static native void nativeSetPaths(String apkPath);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // init FlightCloseReceiver context
+        FlightCloseReceiver.setContext(this);
         
         // get frame size
         DisplayMetrics dm = new DisplayMetrics();
@@ -63,6 +79,14 @@ public class Cocos2dxActivity extends Activity{
         
         // init bitmap context
         Cocos2dxBitmap.setContext(this);
+
+        //init audioManager
+        mAudioManager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+        
+        //Flight Close
+        IntentFilter flightFilter = new IntentFilter();
+        flightFilter.addAction(ACTION_FLIGHT_CLOSED);
+        registerReceiver(flightCloseReceiver, flightFilter);
         
         handler = new Handler(){
         	public void handleMessage(Message msg){
@@ -197,6 +221,9 @@ public class Cocos2dxActivity extends Activity{
     	if (accelerometerEnabled) {
     	    accelerometer.enable();
     	}
+        Log.w("COCOS2D","onResumed.");
+        audioReqFocus();
+        registerHomeKeyReceiver(this);
     }
 
     @Override
@@ -205,8 +232,26 @@ public class Cocos2dxActivity extends Activity{
     	if (accelerometerEnabled) {
     	    accelerometer.disable();
     	}
+        Log.w("COCOS2D","onPaused.");
+        //audioAbandonFocus();
+        unregisterHomeKeyReceiver(this);
     }
 
+    private static void registerHomeKeyReceiver(Context context) {
+        Log.w("COCOS2D"," Duz registerHomeKeyReceiver.");
+        mHomeKeyReceiver = new HomeWatcherReceiver();
+        final IntentFilter homeFilter = new IntentFilter(Intent.ACTION_CLOSE_SYSTEM_DIALOGS);
+
+        context.registerReceiver(mHomeKeyReceiver, homeFilter);
+    }
+
+    private static void unregisterHomeKeyReceiver(Context context) {
+        Log.w("COCOS2D"," Duz unregisterHomeKeyReceiver.");
+        if (null != mHomeKeyReceiver) {
+            context.unregisterReceiver(mHomeKeyReceiver);
+        }
+    }
+    
     protected void setPackageName(String packageName) {
     	Cocos2dxActivity.packageName = packageName;
     	
@@ -240,6 +285,48 @@ public class Cocos2dxActivity extends Activity{
 
 	    dialog.show();
     }
+
+    static OnAudioFocusChangeListener afChangeListener = new OnAudioFocusChangeListener() {
+    	public void onAudioFocusChange(int focusChange) {
+    		if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+    			Log.w("COCOS2D", "AUDIOFOCUS_LOSS_TRANSIENT");
+    			pauseBackgroundMusic();
+    		} else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+    			resumeBackgroundMusic();
+    			Log.w("COCOS2D", "AUDIOFOCUS_GAIN");
+    		} else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+    			Log.w("COCOS2D", "AUDIOFOCUS_LOSS");
+    					/*if(isRunning){
+    					 *  Log.w("COCOS2D", "Workaround of AVANT problem: when AOD try to gain AUDIOFOCUS, regain AUDIOFOCUS to mute AOD background music");
+    					 *  audioReqFocus();
+    					 * }*/
+    			pauseBackgroundMusic();
+    		}
+    	}
+    };
+
+    public static int audioAbandonFocus() {
+    	int result = mAudioManager.abandonAudioFocus(afChangeListener);
+    	Log.w("COCOS2D", "audioAbandonFocus: " + result);
+    	if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+    		Log.w("COCOS2D", "COCOS2D audio: audioAbandonFocus() failure  ");
+    	}
+    	return result;
+    }
+
+    public static int audioReqFocus() {
+    	int result = mAudioManager.requestAudioFocus(afChangeListener,
+    			// Use the music stream.
+    			AudioManager.STREAM_MUSIC,
+    			// Request permanent focus.
+    			AudioManager.AUDIOFOCUS_GAIN);
+    	Log.w("COCOS2D", "audioReqFocus: " + result);
+    	if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+    		Log.w("COCOS2D", "COCOS2D audio: audioReqFocus() failure  ");
+    	}
+    	return result;
+    }
+    
 }
 
 class DialogMessage {

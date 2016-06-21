@@ -66,6 +66,22 @@ namespace cocos2d{
 		CC_SAFE_DELETE(pRet)
 		return NULL;
 	}
+    
+	CCMenu * CCMenu::create(CCMenuItem* item, ...)
+    {
+		va_list args;
+		va_start(args,item);
+		CCMenu *pRet = new CCMenu();
+		if (pRet && pRet->initWithItems(item, args))
+		{
+			pRet->autorelease();
+			va_end(args);
+			return pRet;
+		}
+		va_end(args);
+		CC_SAFE_DELETE(pRet)
+		return NULL;
+    }
 
 	CCMenu* CCMenu::menuWithItem(CCMenuItem* item)
 	{

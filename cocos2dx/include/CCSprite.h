@@ -188,6 +188,12 @@ public:
 	 */
     static CCSprite* spriteWithFile(const char *pszFileName);
 
+	/** Creates an sprite with an image filename.
+	 The rect used will be the size of the image.
+	 The offset will be (0,0).
+	 */
+    static CCSprite* create(const char *pszFileName);
+
 	/** Creates an sprite with an image filename and a rect.
 	 The offset will be (0,0).
 	 */

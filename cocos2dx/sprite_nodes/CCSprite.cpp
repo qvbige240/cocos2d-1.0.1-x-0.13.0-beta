@@ -140,6 +140,11 @@ CCSprite* CCSprite::spriteWithFile(const char *pszFileName)
 	return NULL;
 }
 
+CCSprite* CCSprite::create(const char *pszFileName)
+{
+    return spriteWithFile(pszFileName);
+}
+
 CCSprite* CCSprite::spriteWithFile(const char *pszFileName, const CCRect& rect)
 {
     CCSprite *pobSprite = new CCSprite();

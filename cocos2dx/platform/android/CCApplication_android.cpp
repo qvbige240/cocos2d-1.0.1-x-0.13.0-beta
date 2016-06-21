@@ -80,7 +80,8 @@ ccLanguageType CCApplication::getCurrentLanguage()
 {
     const char *pLanguageName = getCurrentLanguageJNI();
     ccLanguageType ret = kLanguageEnglish;
-
+	
+	
     if (0 == strcmp("zh", pLanguageName))
     {
         ret = kLanguageChinese;
@@ -108,6 +109,38 @@ ccLanguageType CCApplication::getCurrentLanguage()
 	else if (0 == strcmp("ru", pLanguageName))
     {
         ret = kLanguageRussian;
+    }
+	else if (0 == strcmp("ja", pLanguageName))
+    {
+        ret = kLanguageJanpanese;
+    }
+	else if (0 == strcmp("pt", pLanguageName))
+    {
+        ret = kLanguagePortuguese;
+    }
+	else if (0 == strcmp("ko", pLanguageName))
+    {
+        ret = kLanguageKorean;
+    }
+	else if (0 == strcmp("in", pLanguageName))
+    {
+        ret = kLanguageIndonesian;
+    }
+	else if (0 == strcmp("th", pLanguageName))
+    {
+        ret = kLanguageThai;
+    }
+	else if (0 == strcmp("nl", pLanguageName))
+    {
+        ret = kLanguageDutch;
+    }
+	else if (0 == strcmp("fa", pLanguageName))
+    {
+        ret = kLanguageArab;
+    }
+	else if (0 == strcmp("pl", pLanguageName))
+    {
+        ret = kLanguagePolish;
     }
     
     return ret;

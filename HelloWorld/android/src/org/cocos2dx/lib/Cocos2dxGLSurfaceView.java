@@ -23,8 +23,10 @@ THE SOFTWARE.
 ****************************************************************************/
 package org.cocos2dx.lib;
 
+import org.cocos2dx.opengl.GLSurfaceView;
+
 import android.content.Context;
-import android.opengl.GLSurfaceView;
+//import android.opengl.GLSurfaceView;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -192,11 +194,11 @@ public class Cocos2dxGLSurfaceView extends GLSurfaceView {
             }
         });
     	
-    	//super.onPause();
+    	super.onPause();
     }
     
     public void onResume(){
-    	//super.onResume();
+    	super.onResume();
     	
     	queueEvent(new Runnable() {
             @Override

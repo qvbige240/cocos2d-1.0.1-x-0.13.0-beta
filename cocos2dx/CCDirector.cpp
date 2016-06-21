@@ -54,6 +54,8 @@ THE SOFTWARE.
 #include "support/CCProfiling.h"
 #endif // CC_ENABLE_PROFILERS
 
+#include "ENVConfig.h"
+
 #include <string>
 
 using namespace std;
@@ -106,6 +108,9 @@ bool CCDirector::init(void)
 
 	// paused ?
 	m_bPaused = false;
+
+    m_bHandset = false;
+    m_bSetting = false;
 	
 	// purge ?
 	m_bPurgeDirecotorInNextLoop = false;
@@ -458,6 +463,15 @@ bool CCDirector::checkHandset(void)
 {
 	CCRect cc_rect = s_sharedDirector.getOpenGLView()->getViewPort();
 	
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+    if (m_bSetting == true)
+        return m_bHandset;
+#endif
+
+#if (ENVEE_FEATURES == env_envee_nohandset)
+    m_bHandset = false;
+    CCLog("==== touch version. ENVEE_FEATURES: %d \n", ENVEE_FEATURES);
+#else
 	if (cc_rect.size.width > 1024 && cc_rect.size.height > 600)
 	{
 		m_bHandset = true;
@@ -468,8 +482,18 @@ bool CCDirector::checkHandset(void)
 		m_bHandset = false;
 		CCLog("%s%d====no handset m_obWinSizeInPixels.width = %f!\n", __FILE__, __LINE__, m_obWinSizeInPixels.width);
 	}
+    CCLog("==== default version.\n");
+#endif
 
 	return m_bHandset;
+}
+
+void CCDirector::setHandset(bool bHandset)
+{
+        m_bHandset = bHandset;
+        m_bSetting = true;
+        printf("===set handset is %s\n", bHandset == true ? "true" : "false");
+
 }
 
 CCSize CCDirector::getWinSize(void)

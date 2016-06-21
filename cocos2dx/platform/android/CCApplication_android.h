@@ -38,7 +38,13 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground() = 0;
-
+	/*
+	//hx: for gen4
+	virtual void applicationCloseApp() = 0;
+	
+	virtual void applicationClearRecord() = 0;
+	*/
+	//end
     /**
     @brief	Callback by CCDirector for limit FPS.
     @interval       The time, which expressed in second in second, between current frame and next. 
