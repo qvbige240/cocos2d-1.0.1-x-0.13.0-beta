@@ -165,7 +165,11 @@ namespace cocos2d{
     {
         if (m_eState == kCCMenuStateTrackingTouch)
         {
-            m_pSelectedItem->unselected();
+            if (m_pSelectedItem)
+                m_pSelectedItem->unselected();
+            else
+                CCLOG("NULL pointer, error in CCMenu::onExit");
+
             m_eState = kCCMenuStateWaiting;
             m_pSelectedItem = NULL;
         }
