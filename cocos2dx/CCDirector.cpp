@@ -463,7 +463,7 @@ bool CCDirector::checkHandset(void)
 {
 	CCRect cc_rect = s_sharedDirector.getOpenGLView()->getViewPort();
 	
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX || CC_TARGET_PLATFORM == CC_PLATFORM_WIN32)
     if (m_bSetting == true)
         return m_bHandset;
 #endif
