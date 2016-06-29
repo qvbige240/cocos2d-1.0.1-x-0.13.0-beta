@@ -171,6 +171,7 @@ namespace cocos2d{
 		*/
 		static void purgeCachedData();
 		/** creates a bitmap font altas with an initial string and the FNT file */
+		static CCLabelBMFont * create(const char *str, const char *fntFile);
 		static CCLabelBMFont * labelWithString(const char *str, const char *fntFile);
 		static CCLabelBMFont * labelWithString(const char *str, const char *fntFile, CCTextAlignment alignment, float width);
 

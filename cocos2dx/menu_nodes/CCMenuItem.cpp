@@ -593,6 +593,10 @@ namespace cocos2d{
     {
         return CCMenuItemImage::itemFromNormalImage(normalImage, selectedImage, NULL, NULL, NULL);
     }
+    CCMenuItemImage * CCMenuItemImage::create(const char *normalImage, const char *selectedImage, CCObject* target, SEL_MenuHandler selector)
+    {
+        return CCMenuItemImage::itemFromNormalImage(normalImage, selectedImage, NULL, target, selector);
+    }
     CCMenuItemImage * CCMenuItemImage::itemFromNormalImage(const char *normalImage, const char *selectedImage, CCObject* target, SEL_MenuHandler selector)
     {
         return CCMenuItemImage::itemFromNormalImage(normalImage, selectedImage, NULL, target, selector);

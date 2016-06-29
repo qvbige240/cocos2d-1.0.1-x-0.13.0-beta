@@ -702,6 +702,12 @@ namespace cocos2d{
 	}
 
 	//LabelBMFont - Creation & Init
+	CCLabelBMFont *CCLabelBMFont::create(const char *str, const char *fntFile)
+	{
+		return labelWithString(str, fntFile, CCTextAlignmentLeft, 0);
+	}
+
+	//LabelBMFont - Creation & Init
 	CCLabelBMFont *CCLabelBMFont::labelWithString(const char *str, const char *fntFile)
 	{
 		return labelWithString(str, fntFile, CCTextAlignmentLeft, 0);

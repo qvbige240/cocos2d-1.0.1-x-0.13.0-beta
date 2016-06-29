@@ -259,6 +259,8 @@ namespace cocos2d{
         /** creates a menu item with a normal,selected  and disabled image*/
         static CCMenuItemImage* itemFromNormalImage(const char *normalImage, const char *selectedImage, const char *disabledImage);
         /** creates a menu item with a normal and selected image with target/selector */
+        static CCMenuItemImage* create(const char *normalImage, const char *selectedImage, CCObject* target, SEL_MenuHandler selector);
+        /** creates a menu item with a normal and selected image with target/selector */
         static CCMenuItemImage* itemFromNormalImage(const char *normalImage, const char *selectedImage, CCObject* target, SEL_MenuHandler selector);
         /** creates a menu item with a normal,selected  and disabled image with target/selector */
         static CCMenuItemImage* itemFromNormalImage(const char *normalImage, const char *selectedImage, const char *disabledImage, CCObject* target, SEL_MenuHandler selector);
