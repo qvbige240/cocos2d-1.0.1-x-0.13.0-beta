@@ -192,15 +192,14 @@ public:
 			}
 
 			//if (isspace(unicode)) {
-			if (unicode == ' ' || unicode == '\t') {
+			/*if (unicode == ' ' || unicode == '\t') {
 				currentPaintPosition += face->glyph->metrics.horiAdvance >> 6;
 				prevGlyphIndex = glyphIndex;
 				prevCharacter = unicode;
 				lastBreakIndex = currentLine.glyphs.size();
 				continue;
-			}
-
-			LineBreakGlyph glyph;
+			}*/
+  			LineBreakGlyph glyph;
 			glyph.glyphIndex = glyphIndex;
 			glyph.glyphWidth = face->glyph->metrics.width >> 6;
 			glyph.bearingX = face->glyph->metrics.horiBearingX >> 6;
@@ -208,8 +207,15 @@ public:
 			glyph.kerning = 0;
 			glyph.paintPosition = 0;
 
-printf("glyph: %d %d %d %d \n", glyph.glyphIndex, glyph.glyphWidth, glyph.bearingX, glyph.horizAdvance);
-printf("11 currentPaintPosition: %d, glyph.paintPosition: %d, iMaxWidth: %d\n", currentPaintPosition, glyph.paintPosition, iMaxWidth);
+            if (unicode == '\t') {
+                printf("change glyphIndex = %d [\\t] to [ ] space!!\n", glyph.glyphIndex);
+                glyphIndex = FT_Get_Char_Index(face, ' ');
+                glyph.glyphIndex = glyphIndex;
+            }
+
+
+//printf("glyph: %d %d %d %d \n", glyph.glyphIndex, glyph.glyphWidth, glyph.bearingX, glyph.horizAdvance);
+//printf("11 currentPaintPosition: %d, glyph.paintPosition: %d, iMaxWidth: %d\n", currentPaintPosition, glyph.paintPosition, iMaxWidth);
 
 			if (prevGlyphIndex != 0 && hasKerning) {
 				FT_Get_Kerning(face, prevGlyphIndex, glyphIndex, FT_KERNING_DEFAULT, &delta);
@@ -265,7 +271,7 @@ printf("11 currentPaintPosition: %d, glyph.paintPosition: %d, iMaxWidth: %d\n", 
 			currentLine.glyphs.push_back(glyph);
 			currentPaintPosition += glyph.kerning + glyph.horizAdvance;
 
-printf("22 currentPaintPosition: %d, glyph.paintPosition: %d, iMaxWidth: %d\n", currentPaintPosition, glyph.paintPosition, iMaxWidth);
+//printf("22 currentPaintPosition: %d, glyph.paintPosition: %d, iMaxWidth: %d\n", currentPaintPosition, glyph.paintPosition, iMaxWidth);
 		}
 
 		if ( currentLine.glyphs.empty() == false ) {
