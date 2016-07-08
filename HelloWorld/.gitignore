@@ -19,6 +19,7 @@ build/
 autom4te.cache/
 .externalToolBuilders
 .settings
+build_*/
 
 #ignore thumbnails created by windows
 Thumbs.db
