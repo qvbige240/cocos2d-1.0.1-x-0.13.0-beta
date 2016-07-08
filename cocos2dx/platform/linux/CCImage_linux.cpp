@@ -348,7 +348,7 @@ public:
 		FT_Face face;
 
 		//std::string fontfile = getFontFile(pFontName);
-		if ( FT_New_Face( library, pFontName, 0, &face ) ) {
+		if ( FT_New_Face( library, "fonts/font_msyh.ttf"/*pFontName*/, 0, &face ) ) {
 			//no valid font found use default			
 			//if ( FT_New_Face(library, "/usr/share/fonts/arial.ttf", 0, &face) ) {
 			if ( FT_New_Face(library, "fonts/font_msyh.ttf", 0, &face) ) {
