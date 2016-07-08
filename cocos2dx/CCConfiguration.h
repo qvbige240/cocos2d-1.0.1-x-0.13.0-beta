@@ -29,6 +29,7 @@ THE SOFTWARE.
 #include "CCObject.h"
 #include <string>
 #include "CCGL.h"
+#include "CCMutableDictionary.h"
 
 namespace   cocos2d {
 
@@ -78,11 +79,14 @@ protected:
 	GLint           m_nMaxSamplesAllowed;
     char *          m_pGlExtensions;
 
+	CCDictionary<std::string, CCObject*>	*m_pDict;
 private:
 
     CCConfiguration(void);
 
 public:	
+
+	virtual ~CCConfiguration(void);
 
 	CCGlesVersion getGlesVersion();
 	
@@ -144,6 +148,14 @@ public:
 	bool checkForGLExtension(const std::string &searchName);
 
 	bool init(void);
+
+	const char *valueForKey(const char *key, CCDictionary<std::string, CCObject*> *dict);
+	const char *getCString(const char *key, const char *default_value) const;
+	bool getBool(const char *key, bool default_value=false);
+	double getNumber(const char *key, double default_value=0.0);
+	CCObject *getObject(const char *key) const;
+	void setObject(const char *key, CCObject *value);
+	void loadConfigFile(const char *filename);
 
 public:
 	/** returns a shared instance of the CCConfiguration */

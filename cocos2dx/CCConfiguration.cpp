@@ -27,6 +27,8 @@ THE SOFTWARE.
 #include "ccMacros.h"
 #include "ccConfig.h"
 #include <string.h>
+#include "CCString.h"
+
 using namespace std;
 namespace   cocos2d {
 
@@ -81,7 +83,19 @@ bool CCConfiguration::init(void)
 	CCLOG("cocos2d: compiled with VBO support in TextureAtlas : %s", "NO");
 #endif // CC_TEXTURE_ATLAS_USES_VBO
 
+	m_pDict = new CCDictionary<std::string, CCObject*>();
+	if (m_pDict != NULL)
+	{
+		m_pDict->autorelease();
+	}
+	m_pDict->retain();
+
 	return true;
+}
+
+CCConfiguration::~CCConfiguration(void)
+{
+	m_pDict->release();
 }
 
 CCGlesVersion CCConfiguration::getGlesVersion()
@@ -134,4 +148,97 @@ bool CCConfiguration::checkForGLExtension(const string &searchName)
 	
 	return bRet;
 }
+
+const char* CCConfiguration::valueForKey(const char *key, CCDictionary<std::string, CCObject*> *dict)
+{
+	if (dict)
+	{
+		CCString *pString = (CCString*)dict->objectForKey(std::string(key));
+		return pString ? pString->m_sString.c_str() : "";
+	}
+	return "";
+}
+
+
+const char *CCConfiguration::getCString(const char *key, const char *default_value) const
+{
+	CCObject *object = m_pDict->objectForKey(key);
+	if (object) {
+		if ( CCString *str = dynamic_cast<CCString*>(object) )
+			return str->m_sString.c_str();
+
+		CCAssert(false, "Key found, but from different type");
+	}
+
+	return default_value;
+}
+
+bool CCConfiguration::getBool(const char *key, bool default_value/* =false */)
+{
+	return (atoi(valueForKey(key, m_pDict)) == 0 ? false : true);
+}
+
+double CCConfiguration::getNumber(const char *key, double default_value/* =0.0 */)
+{
+	const char *str = valueForKey(key, m_pDict);
+	if (strlen(str) == 0)
+		return 0.0;
+	else
+		return atof(str);
+}
+
+CCObject *CCConfiguration::getObject(const char *key) const
+{
+	return m_pDict->objectForKey(key);
+}
+
+void CCConfiguration::setObject(const char *key, CCObject *value)
+{
+	m_pDict->setObject(value, key);
+}
+
+void CCConfiguration::loadConfigFile(const char *filename)
+{
+	const char *pszPath = CCFileUtils::fullPathFromRelativePath(filename);
+	CCDictionary<std::string, CCObject*> *dict = CCFileUtils::dictionaryWithContentsOfFile(pszPath);
+
+	bool metadata_ok = false;
+	CCDictionary<std::string, CCObject*> *metadata = (CCDictionary<std::string, CCObject*>*)dict->objectForKey(std::string("metadata"));
+	if ( metadata ) {
+		int format = atoi(valueForKey("format", metadata));
+
+		if (format == 1) {
+			metadata_ok = true;
+		}
+	}
+
+	if (!metadata_ok)
+	{
+		CCLOG("Invalid config format for file: %s", filename);
+		return;
+	}
+
+	CCDictionary<std::string, CCObject*> *data = (CCDictionary<std::string, CCObject*>*)dict->objectForKey(std::string("data"));
+	if (!data) {
+		CCLOG("Expected 'data' dict, but not found. Config file: %s", filename);
+		return;
+	}
+
+	data->begin();
+	std::string key = "";
+
+	CCDictionary<std::string, CCObject*> *sub_data = NULL;
+	while ( (sub_data = (CCDictionary<std::string, CCObject*>*)data->next(&key)) )
+	{
+		//CCString *pString = (CCString*)sub_data;
+		//std::string tmp = pString->m_sString;
+
+		if ( ! m_pDict->objectForKey(key) )
+			m_pDict->setObject(sub_data, key);
+		else
+			CCLOG("Key already present. Ignoring '%s'", key);
+	}
+
+}
+
 }//namespace   cocos2d 
